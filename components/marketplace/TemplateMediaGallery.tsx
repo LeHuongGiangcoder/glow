@@ -69,7 +69,7 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
 
       {/* Thumbnail Navigation Strip */}
       {allImages.length > 1 && (
-        <div className="flex flex-wrap gap-2.5">
+        <div className="flex w-full gap-2.5 overflow-x-auto pb-2">
           {allImages.map((url, index) => {
             const isActive = activeIndex === index
             return (
@@ -78,7 +78,7 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
                 type="button"
                 onClick={() => setActiveIndex(index)}
                 className={cn(
-                  'relative aspect-4/5 w-20 overflow-hidden rounded-sm transition-opacity duration-fast ease-standard md:w-24',
+                  'relative aspect-4/5 w-20 shrink-0 overflow-hidden rounded-sm transition-opacity duration-fast ease-standard md:w-24',
                   isActive
                     ? 'border-2 border-ink-900 opacity-100'
                     : 'border border-line-strong opacity-60 hover:opacity-100',
