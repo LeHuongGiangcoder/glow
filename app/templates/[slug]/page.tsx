@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Footer } from '@/components/ui/Footer'
 import { NavBar } from '@/components/ui/NavBar'
+import { TemplateMediaGallery } from '@/components/marketplace/TemplateMediaGallery'
 import {
   formatVnd,
   getTemplate,
@@ -54,12 +55,7 @@ export default async function TemplateDetailPage(
         </div>
 
         <div className="container-max grid grid-cols-1 gap-12 py-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-          {/* Preview. PRD F3 wants a device-preview iframe here — needs a real
-              demo build before it can be embedded. */}
-          <div
-            className="aspect-4/5 rounded-md"
-            style={{ background: template.imageColor }}
-          />
+          <TemplateMediaGallery template={template} />
 
           <div>
             <p className="eyebrow">{template.mood}</p>

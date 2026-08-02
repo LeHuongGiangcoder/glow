@@ -52,8 +52,36 @@ export const templateType = defineType({
       validation: (rule) => rule.required().positive(),
     }),
     defineField({
+      name: 'coverImage',
+      title: 'Ảnh bìa (Cover Image - Display chính)',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      description: 'Ảnh chính hiển thị trên danh sách mẫu và trang chi tiết.',
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Danh sách ảnh (Gallery - View more khi vào chi tiết)',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Mô tả ảnh (Alt Text)',
+            },
+          ],
+        },
+      ],
+      description: 'Các góc nhìn hoặc giao diện trang khác nhau của mẫu.',
+    }),
+    defineField({
       name: 'imageColor',
-      title: 'Màu nền / CSS Variable (Khối xem trước)',
+      title: 'Màu nền / CSS Variable (Khối xem trước khi chưa có ảnh)',
       type: 'string',
       description: 'Ví dụ: var(--color-paper-100)',
       validation: (rule) => rule.required(),

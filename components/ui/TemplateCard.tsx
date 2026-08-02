@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
 import { formatVnd, type Template } from '@/lib/templates'
@@ -25,17 +26,26 @@ export function TemplateCard({
       )}
     >
       <div
-        className="relative aspect-4/5"
+        className="relative aspect-4/5 overflow-hidden"
         style={{ background: template.imageColor }}
       >
+        {template.coverImageUrl && (
+          <Image
+            src={template.coverImageUrl}
+            alt={template.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover"
+          />
+        )}
         <span
-          className="eyebrow absolute left-3.5 top-3.5 rounded-pill bg-paper-050/82 px-2.5 py-1"
+          className="eyebrow absolute left-3.5 top-3.5 z-10 rounded-pill bg-paper-050/82 px-2.5 py-1"
           // Translucent paper tint is the system's only use of transparency.
         >
           {template.mood}
         </span>
         {template.expressAvailable && (
-          <span className="eyebrow absolute bottom-3.5 left-3.5 rounded-pill bg-paper-050/82 px-2.5 py-1">
+          <span className="eyebrow absolute bottom-3.5 left-3.5 z-10 rounded-pill bg-paper-050/82 px-2.5 py-1">
             Còn nhận hoả tốc
           </span>
         )}

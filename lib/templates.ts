@@ -28,6 +28,8 @@ export type Template = {
   mood: string
   styleTags: StyleTag[]
   priceVnd: number
+  coverImageUrl?: string
+  galleryUrls?: string[]
   /** Stand-in for coverImage until real screenshots land. */
   imageColor: string
   /** PRD F2: "Còn nhận đơn hoả tốc" badge, toggled per template in Sanity. */
