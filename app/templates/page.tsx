@@ -17,7 +17,7 @@ export default async function TemplatesPage() {
     <>
       <NavBar />
 
-      <main className="flex-1">
+      <main className="flex-1 screen-transition">
         <section className="container-max section-y">
           <div className="max-w-[46ch]">
             <p className="eyebrow">Bộ sưu tập</p>

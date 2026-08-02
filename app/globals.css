@@ -100,6 +100,10 @@
   --container-max: 1240px;
 
   --animate-glow-pulse: glow-pulse 1.8s var(--ease-standard) infinite;
+  --animate-progress-sweep: progress-sweep 1.6s var(--ease-standard) infinite;
+  --animate-spin-slow: spin-slow 1s linear infinite;
+  --animate-screen-transition: screen-fade-in 0.45s var(--ease-out) forwards;
+  --animate-fade-in: fade-in 0.3s var(--ease-out) forwards;
 }
 
 /* Original design-system variable names, kept so components ported verbatim
@@ -314,6 +318,74 @@
     color: var(--color-fg-muted);
   }
 
+  /* --- Accordion --------------------------------------------------------
+     Built on native <details>/<summary>: keyboard, screen-reader and
+     find-in-page behaviour come for free, and the section stays a server
+     component. The default disclosure triangle is replaced by a drawn plus
+     that loses its vertical stroke when open — a rule turning into another
+     rule, in keeping with the hairline system. */
+  .accordion-item {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .accordion-trigger {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    cursor: pointer;
+    list-style: none;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+
+  /* Safari draws its marker through a separate pseudo-element. */
+  .accordion-trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .accordion-trigger:hover {
+    opacity: 0.55;
+  }
+
+  .accordion-icon {
+    position: relative;
+    flex: none;
+    width: var(--space-4);
+    height: var(--space-4);
+    /* Optical centring against the first line of a --text-lg question. */
+    margin-top: var(--space-1);
+  }
+
+  .accordion-icon::before,
+  .accordion-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    background: var(--color-fg);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .accordion-icon::before {
+    height: 1px;
+  }
+
+  .accordion-icon::after {
+    width: 1px;
+  }
+
+  [open] > .accordion-trigger .accordion-icon::after {
+    transform: scaleY(0);
+  }
+
+  .accordion-panel {
+    padding-bottom: var(--space-5);
+    /* Keeps the answer clear of the icon column. */
+    padding-right: var(--space-7);
+    animation: fade-in var(--duration-base) var(--ease-out);
+  }
+
   /* --- Layout ----------------------------------------------------------- */
   .container-max {
     width: 100%;
@@ -421,17 +493,97 @@
       font-size: var(--text-2xl);
     }
   }
+
+  /* --- Loading & screen transition utilities ---------------------------- */
+  .loading-progress-track {
+    width: 150px;
+    height: 2px;
+    background-color: var(--color-line);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .loading-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40%;
+    background-color: var(--color-fg);
+    border-radius: var(--radius-pill);
+    animation: var(--animate-progress-sweep);
+  }
+
+  .loading-circle {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-line);
+    border-top-color: var(--color-fg);
+    border-radius: 999px;
+    animation: var(--animate-spin-slow);
+  }
+
+  .screen-transition {
+    animation: var(--animate-screen-transition);
+    will-change: opacity, transform;
+  }
+
+  .animate-fade-in {
+    animation: var(--animate-fade-in);
+  }
 }
 
 @keyframes glow-pulse {
   0%,
   100% {
-    opacity: 0.55;
-    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+    opacity: 0.6;
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
   }
   50% {
     opacity: 1;
-    filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.55));
+    filter: drop-shadow(0 0 14px rgba(0, 0, 0, 0.08));
+  }
+}
+
+@keyframes progress-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(150%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes screen-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

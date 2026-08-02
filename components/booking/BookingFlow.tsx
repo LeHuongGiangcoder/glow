@@ -53,19 +53,36 @@ export function BookingFlow({
       : []),
   ]
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const found = validateDetails(details)
     setErrors(found)
     if (Object.keys(found).length > 0 || !date || !time) return
 
     setPending(true)
 
-    // PLACEHOLDER: PRD F8 POSTs `details` to the Apps Script endpoint here and
-    // only advances once it returns the booked slot. Personal answers stay in
-    // the request body — the URL below carries nothing but the meeting itself.
-    const params = new URLSearchParams({ type, date, time })
-    if (type === 'template' && templateSlug) params.set('template', templateSlug)
-    router.push(`/book/confirmed?${params.toString()}`)
+    try {
+      await fetch('/api/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type,
+          templateSlug: templateSlug ?? '',
+          templateName:
+            templateName ?? (type === 'bespoke' ? 'Bespoke' : 'Mẫu có sẵn'),
+          date,
+          time,
+          ...details,
+        }),
+      })
+    } catch (e) {
+      console.error('Lỗi khi gửi form booking:', e)
+    } finally {
+      setPending(false)
+      const params = new URLSearchParams({ type, date, time })
+      if (type === 'template' && templateSlug)
+        params.set('template', templateSlug)
+      router.push(`/book/confirmed?${params.toString()}`)
+    }
   }
 
   return (

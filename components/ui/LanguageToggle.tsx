@@ -6,7 +6,7 @@ import { cn } from '@/lib/cn'
 export type Lang = 'VI' | 'EN'
 
 const segment =
-  'rounded-pill px-[11px] py-[5px] transition-colors duration-fast ease-standard'
+  'rounded-pill px-2.5 py-[4px] md:px-[9px] md:py-[3px] md:text-[12px] transition-colors duration-fast ease-standard'
 
 /**
  * Visual-only for now: it holds local state and does not route. PRD F11
@@ -37,8 +37,8 @@ export function LanguageToggle({
       onClick={toggle}
       aria-label={`Ngôn ngữ: ${active}. Đổi sang ${active === 'VI' ? 'English' : 'Tiếng Việt'}`}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-pill border border-line-strong',
-        'cursor-pointer bg-transparent px-1.5 py-[5px] font-body text-xs tracking-wide',
+        'inline-flex items-center gap-1 md:gap-1 rounded-pill border border-line-strong',
+        'cursor-pointer bg-transparent p-[3px] md:p-[2px] font-body text-[13px] tracking-wide',
         className,
       )}
     >

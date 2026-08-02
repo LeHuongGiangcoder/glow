@@ -25,13 +25,15 @@ export default async function BookingPage(props: PageProps<'/book'>) {
     <>
       <NavBar />
 
-      <BookingFlow
-        today={todayIso()}
-        type={type}
-        templateSlug={template?.slug}
-        templateName={template?.name}
-        exitHref={template ? `/templates/${template.slug}` : '/'}
-      />
+      <main className="flex-1 screen-transition">
+        <BookingFlow
+          today={todayIso()}
+          type={type}
+          templateSlug={template?.slug}
+          templateName={template?.name}
+          exitHref={template ? `/templates/${template.slug}` : '/'}
+        />
+      </main>
 
       <Footer />
     </>

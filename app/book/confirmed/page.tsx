@@ -69,7 +69,8 @@ export default async function BookingConfirmedPage(
     <>
       <NavBar />
 
-      <BookingShell current={3}>
+      <main className="flex-1 screen-transition">
+        <BookingShell current={3}>
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr]">
           <BookingRail rows={railRows}>
             <p className="lede mt-5 text-sm">{MEETING.description}</p>
@@ -108,6 +109,7 @@ export default async function BookingConfirmedPage(
           </div>
         </div>
       </BookingShell>
+      </main>
 
       <Footer />
     </>

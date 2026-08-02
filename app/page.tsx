@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Accordion, AccordionItem } from '@/components/ui/Accordion'
 import { Button } from '@/components/ui/Button'
 import { Footer } from '@/components/ui/Footer'
 import { NavBar } from '@/components/ui/NavBar'
@@ -47,13 +48,76 @@ const trustStats = [
   { value: 'Không giới hạn', label: 'Số vòng sửa' },
 ]
 
+/** PRD F1 — FAQ. Grouped so the list of eleven reads as three short lists. */
+const faqGroups = [
+  {
+    title: 'Quy trình',
+    items: [
+      {
+        q: 'Đặt lịch xong thì chuyện gì xảy ra?',
+        a: 'Glow liên hệ xác nhận trong vòng 12 giờ. Buổi meeting 30–45 phút qua Google Meet để thu thập nội dung, ảnh, và thanh toán. Sau đó Glow bắt tay vào làm ngay.',
+      },
+      {
+        q: 'Bao lâu thì xong?',
+        a: 'Trung bình 7–10 ngày. Cần gấp thì có lựa chọn hoả tốc 1–3 ngày, áp dụng cho cả mẫu có sẵn lẫn thiết kế riêng.',
+      },
+      {
+        q: 'Sửa được mấy lần?',
+        a: 'Không giới hạn số vòng sửa nội dung, hình ảnh, màu sắc theo đúng bố cục đã chọn.',
+      },
+      {
+        q: 'Domain và hosting thế nào?',
+        a: 'Mặc định dùng subdomain glow.vn miễn phí, hosting 12 tháng. Muốn domain riêng, Glow hỗ trợ trỏ domain, phụ phí báo cụ thể khi tư vấn.',
+      },
+    ],
+  },
+  {
+    title: 'Mẫu có sẵn & Bespoke',
+    items: [
+      {
+        q: 'Mẫu có sẵn thì tôi đổi được gì?',
+        a: 'Đổi toàn bộ thông tin cá nhân (tên, ngày giờ, địa điểm, nội dung chữ) và đổi màu theo bảng màu có sẵn của mẫu. Tối đa 60 ảnh.',
+      },
+      {
+        q: 'Tôi không đổi được gì?',
+        a: 'Không đổi cấu trúc section, không thiết kế lại từ đầu, không chụp ảnh hay viết nội dung thay bạn. Muốn thứ khác biệt hơn, đó là lúc nên xem Bespoke.',
+      },
+      {
+        q: 'Bespoke khác mẫu có sẵn ở đâu?',
+        a: 'Thiết kế từ đầu theo câu chuyện riêng của hai bạn, không giới hạn theo bố cục có sẵn. Giá nằm trong bản Proposal, xem công khai ngay trên site trước khi đặt lịch.',
+      },
+      {
+        q: 'Bespoke có mắc hơn không?',
+        a: 'Giá theo Proposal, không cố định như mẫu có sẵn vì mỗi dự án khác nhau. Xem Proposal trước để biết chính xác trước khi quyết định.',
+      },
+      {
+        q: 'Bespoke có nhận hoả tốc không?',
+        a: 'Có, thời gian cụ thể tuỳ độ phức tạp, thoả thuận trong buổi meeting.',
+      },
+    ],
+  },
+  {
+    title: 'Tính năng & sử dụng',
+    items: [
+      {
+        q: 'Tính năng Smart RSVP có tính phí thêm không?',
+        a: 'Không, đã bao gồm sẵn trong cả mẫu có sẵn và Bespoke.',
+      },
+      {
+        q: 'Ai dùng được, khách lớn tuổi có dùng nổi không?',
+        a: 'Cô dâu chú rể là người quản lý, tự đăng nhập dashboard sau khi Glow bàn giao. Khách mời chỉ cần gõ tên vào link RSVP, không cần biết dùng công nghệ.',
+      },
+    ],
+  },
+]
+
 export default async function HomePage() {
   const templates = await getTemplates()
   return (
     <>
       <NavBar />
 
-      <main className="flex-1">
+      <main className="flex-1 screen-transition">
         {/* Hero */}
         <section className="container-narrow section-y text-center">
           <p className="eyebrow">Wedding Website Studio</p>
@@ -146,6 +210,48 @@ export default async function HomePage() {
             <Button href="/bespoke" variant="secondary" size="md">
               Xem Bespoke
             </Button>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="container-max hairline-t section-y">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12">
+            <div className="md:col-span-4">
+              <div className="md:sticky md:top-24">
+                <p className="eyebrow">Câu hỏi thường gặp</p>
+                <h2 className="display-section mt-4">
+                  Những điều hai bạn hay hỏi
+                </h2>
+                <p className="lede mt-4 max-w-[38ch]">
+                  Chưa thấy câu trả lời mình cần? Đặt lịch một buổi tư vấn, Glow
+                  trả lời trực tiếp.
+                </p>
+                <div className="mt-7">
+                  <Button href="/book" variant="secondary" size="md">
+                    Đặt lịch tư vấn
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="md:col-span-8">
+              {faqGroups.map((group) => (
+                <div key={group.title} className="mt-12 first:mt-0">
+                  <p className="eyebrow text-fg-muted">{group.title}</p>
+                  <Accordion className="mt-4">
+                    {group.items.map((item, i) => (
+                      <AccordionItem
+                        key={item.q}
+                        question={item.q}
+                        defaultOpen={group === faqGroups[0] && i === 0}
+                      >
+                        {item.a}
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </main>

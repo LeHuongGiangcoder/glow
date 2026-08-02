@@ -44,7 +44,7 @@ export default async function TemplateDetailPage(
     <>
       <NavBar />
 
-      <main className="flex-1 pb-28 lg:pb-0">
+      <main className="flex-1 pb-28 lg:pb-0 screen-transition">
         <div className="container-max hairline-b py-7">
           <Link
             href="/templates"
