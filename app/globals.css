@@ -1,26 +1,394 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
+/* ============================================================================
+   Glow Design System — ported from Claude Design project "Glow Design System"
+   (4cb58f53-bd6b-42af-b6f7-3e68153cab66), files: styles.css + tokens/*.css
+
+   This file is the single source of truth for tokens. Do not invent font sizes,
+   colors, spacing, radii, shadows, or durations elsewhere — add them here.
+   ========================================================================== */
+
+@theme {
+  /* --- Color ramp -------------------------------------------------------
+     Strictly black / white / gray. No accent hue anywhere in the system;
+     hierarchy comes from value and type, never from hue. */
+  --color-ink-900: #000000;
+  --color-ink-700: #262626;
+  --color-ink-500: #595959;
+  --color-warm-gray-300: #a3a3a3;
+  --color-warm-gray-100: #e5e5e5;
+  --color-paper-050: #ffffff;
+  --color-paper-100: #f2f2f2;
+
+  /* --- Semantic color ---------------------------------------------------
+     Prefer these over the raw ramp: bg-page, bg-card, text-fg, text-fg-muted,
+     border-line, border-line-strong. */
+  --color-page: var(--color-paper-050);
+  --color-card: var(--color-paper-050);
+  --color-sunken: var(--color-paper-100);
+  --color-inverse: var(--color-ink-900);
+  --color-fg: var(--color-ink-900);
+  --color-fg-muted: var(--color-ink-500);
+  --color-fg-inverse: #ffffff;
+  --color-line: var(--color-warm-gray-100);
+  --color-line-strong: var(--color-warm-gray-300);
+  --color-line-inverse: rgba(255, 255, 255, 0.24);
+
+  /* --- Type families ----------------------------------------------------
+     Vietnamese coverage was verified per face; see app/fonts.ts. Big Caslon,
+     Ahsing and Abril Fatface each miss ~48 of 74 Vietnamese diacritics, so the
+     default body face is EB Garamond and the display face is Playfair Display.
+     --font-body-latin is the brand's Big Caslon, safe on Latin-only surfaces. */
+  --font-display: var(--font-playfair), Georgia, 'Times New Roman', serif;
+  --font-body: var(--font-eb-garamond), Georgia, 'Times New Roman', serif;
+  --font-body-latin: var(--font-big-caslon), 'Book Antiqua', Palatino, Georgia, serif;
+  --font-logo: var(--font-ahsing), cursive;
+
+  /* --- Type scale -------------------------------------------------------
+     text-eyebrow … text-5xl. These REPLACE Tailwind's default size scale. */
+  --text-eyebrow: 13px;
+  --text-xs: 14px;
+  --text-sm: 16px;
+  --text-base: 18px;
+  --text-lg: 21px;
+  --text-xl: 27px;
+  --text-2xl: 36px;
+  --text-3xl: 50px;
+  --text-4xl: 68px;
+  --text-5xl: 96px;
+  --text-6xl: initial;
+  --text-7xl: initial;
+  --text-8xl: initial;
+  --text-9xl: initial;
+
+  --leading-tight: 1.05;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-eyebrow: 0.18em;
+
+  /* --- Radii ------------------------------------------------------------
+     Small radii overall — the serif logotype is sharp, nothing goes blobby.
+     Pills are the one deliberate exception, reserved for actionable shapes
+     (buttons, chips, toggles) so they read differently from content shapes. */
+  --radius-sm: 3px;
+  --radius-md: 8px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  /* --- Shadows — intentionally none. Surfaces are separated by tone and
+     hairline borders, never by a drop shadow. Tokens stay defined so
+     `shadow-card` / `shadow-card-hover` remain valid utilities, but they
+     resolve to nothing — do not reintroduce a shadow value here. ---------- */
+  --shadow-card: none;
+  --shadow-card-hover: none;
+  --shadow-inverse: none;
+
+  /* --- Motion — minimal and slow. No bounces, no springs. --------------- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 240ms;
+  --duration-slow: 420ms;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --container-narrow: 820px;
+  --container-max: 1240px;
+
+  --animate-glow-pulse: glow-pulse 1.8s var(--ease-standard) infinite;
+}
+
+/* Original design-system variable names, kept so components ported verbatim
+   from the Claude Design project resolve without rewriting. Prefer the @theme
+   tokens above in new code. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Design-system spacing scale. These are NOT Tailwind's — Tailwind v4 derives
+     every padding and margin utility from a single `--spacing` multiplier and
+     defines no `--spacing-6`, so referencing one in plain CSS computes to 0.
+     Use these vars in CSS; use Tailwind's numeric utilities in markup, where
+     the two scales line up: space-1=p-1, 8=p-2, 12=p-3, 16=p-4, 24=p-6,
+     32=p-8, 48=p-12, 64=p-16, 96=p-24, 128=p-32. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  /* Section rhythm: sections breathe, never cramped. */
+  --section-y: 72px;
+  --section-y-md: 96px;
+
+  --surface-page: var(--color-page);
+  --surface-card: var(--color-card);
+  --surface-inverse: var(--color-inverse);
+  --surface-sunken: var(--color-sunken);
+  --text-primary: var(--color-fg);
+  --text-secondary: var(--color-fg-muted);
+  --text-on-inverse: var(--color-fg-inverse);
+  --text-accent: var(--color-fg);
+  --border-subtle: var(--color-line);
+  --border-default: var(--color-line-strong);
+  --border-inverse: var(--color-line-inverse);
+
+  --action-primary-bg: var(--color-ink-900);
+  --action-primary-text: #ffffff;
+  --action-primary-hover: var(--color-ink-700);
+  --action-secondary-border: var(--color-ink-900);
+  --action-secondary-text: var(--color-ink-900);
+  --action-secondary-hover-bg: var(--color-ink-900);
+  --action-secondary-hover-text: #ffffff;
+  --action-ghost-hover-bg: rgba(0, 0, 0, 0.06);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background: var(--color-page);
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Body copy is never bold — the invitation-card feel comes from the serif and
+     relaxed leading, not weight. Emphasis lives in the display face. */
+  strong,
+  b {
+    font-weight: 400;
+    color: var(--color-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink-900);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-ink-900);
+    color: var(--color-fg-inverse);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* --- Typography -------------------------------------------------------
+     Use these instead of restating font/size/leading triplets per section. */
+
+  /* Tiny uppercase section label. The one place all-caps is allowed — a
+     typographic accent, not a shouting register. */
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: var(--text-eyebrow);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-fg);
+  }
+
+  .display-hero {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-fg);
+  }
+
+  .display-section {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    color: var(--color-fg);
+  }
+
+  .display-card {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    color: var(--color-fg);
+  }
+
+  /* Standfirst / section intro paragraph. */
+  .lede {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-fg-muted);
+  }
+
+  .wordmark {
+    font-family: var(--font-logo);
+    line-height: 1;
+    color: var(--color-fg);
+  }
+
+  /* --- Form controls ----------------------------------------------------
+     Fields are ruled lines, not boxes: filling the booking form should feel
+     like writing on a printed card. SearchBar's pill outline stays the one
+     exception — it is a search affordance, not a form field.
+
+     Focus is signalled by the rule going from hairline gray to full ink AND
+     from 1px to 2px, so it is never colour alone; the padding compensates so
+     the extra pixel does not shift the layout. */
+  .field-label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-eyebrow);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .field-control {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    border-radius: 0;
+    background: transparent;
+    padding-block: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-snug);
+    color: var(--color-fg);
+    transition:
+      border-color var(--duration-fast) var(--ease-standard),
+      border-width var(--duration-fast) var(--ease-standard);
+  }
+
+  .field-control::placeholder {
+    color: var(--color-line-strong);
+    font-style: italic;
+  }
+
+  .field-control:hover {
+    border-bottom-color: var(--color-line-strong);
+  }
+
+  .field-control:focus {
+    outline: none;
+    border-bottom-color: var(--color-fg);
+    border-bottom-width: 2px;
+    padding-bottom: calc(var(--space-3) - 1px);
+  }
+
+  /* Invalid also shifts weight, not hue — the palette has no red to spend. */
+  .field-control[aria-invalid='true'] {
+    border-bottom-color: var(--color-fg);
+    border-bottom-width: 2px;
+    padding-bottom: calc(var(--space-3) - 1px);
+  }
+
+  .field-error {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-fg);
+  }
+
+  .field-hint {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    color: var(--color-fg-muted);
+  }
+
+  /* --- Layout ----------------------------------------------------------- */
+  .container-max {
+    width: 100%;
+    max-width: calc(var(--container-max) + var(--space-5) * 2);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+  }
+
+  .container-narrow {
+    width: 100%;
+    max-width: calc(var(--container-narrow) + var(--space-5) * 2);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+  }
+
+  .section-y {
+    padding-block: var(--section-y);
+  }
+
+  .hairline-t {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .hairline-b {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  @media (min-width: 48rem) {
+    .display-hero {
+      font-size: var(--text-4xl);
+    }
+
+    .display-section {
+      font-size: var(--text-2xl);
+    }
+
+    .lede {
+      font-size: var(--text-lg);
+    }
+
+    .section-y {
+      padding-block: var(--section-y-md);
+    }
+
+    .container-max {
+      max-width: calc(var(--container-max) + var(--space-7) * 2);
+      padding-inline: var(--space-7);
+    }
+
+    .container-narrow {
+      max-width: calc(var(--container-narrow) + var(--space-7) * 2);
+      padding-inline: var(--space-7);
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .display-hero {
+      font-size: var(--text-5xl);
+    }
+
+    .display-section {
+      font-size: var(--text-3xl);
+    }
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.55));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
