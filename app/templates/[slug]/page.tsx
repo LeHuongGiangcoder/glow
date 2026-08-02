@@ -54,10 +54,12 @@ export default async function TemplateDetailPage(
           </Link>
         </div>
 
-        <div className="container-max grid grid-cols-1 gap-12 py-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-          <TemplateMediaGallery template={template} />
+        <div className="container-max grid grid-cols-1 gap-12 py-14 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
+          <div className="w-full min-w-0">
+            <TemplateMediaGallery template={template} />
+          </div>
 
-          <div>
+          <div className="min-w-0">
             <p className="eyebrow">{template.mood}</p>
             <h1 className="display-hero mt-3">{template.name}</h1>
             <p className="lede mt-5 max-w-[46ch]">{template.description}</p>

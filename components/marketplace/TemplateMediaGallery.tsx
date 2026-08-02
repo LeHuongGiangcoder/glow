@@ -39,7 +39,7 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
   if (allImages.length === 0) {
     return (
       <div
-        className="aspect-4/5 w-full rounded-md"
+        className="aspect-4/5 w-full min-w-0 rounded-md"
         style={{ background: template.imageColor }}
       />
     )
@@ -48,7 +48,7 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
   const activeUrl = allImages[activeIndex] || allImages[0]
 
   return (
-    <div className="flex flex-col gap-3.5">
+    <div className="flex w-full min-w-0 flex-col gap-3.5">
       {/* Main Exhibition Stage */}
       <div
         className="group relative aspect-4/5 w-full cursor-pointer overflow-hidden rounded-md bg-sunken"
