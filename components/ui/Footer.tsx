@@ -10,7 +10,7 @@ export function Footer() {
   return (
     <footer className="hairline-t">
       <div className="container-max flex flex-wrap items-center justify-between gap-6 py-12">
-        <Wordmark className="text-xl" />
+        <Wordmark className="h-6" />
         <div className="flex flex-wrap gap-8 font-body text-sm text-fg-muted">
           {social.map((item) => (
             <a

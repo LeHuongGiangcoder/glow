@@ -1,10 +1,9 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
 
 /**
- * The "Glow" logotype. Ahsing is reserved strictly for this — never headings or
- * body copy. The word is Latin-only, so Ahsing's missing Vietnamese diacritics
- * are not a problem here.
+ * The "Glow" brand logo image.
  */
 export function Wordmark({
   className,
@@ -16,22 +15,30 @@ export function Wordmark({
   onInverse?: boolean
 }) {
   const content = (
-    <span
+    <Image
+      src="/glow-logo.png"
+      alt="Glow Wedding Logo"
+      width={240}
+      height={80}
+      priority
       className={cn(
-        'wordmark',
-        onInverse && 'text-fg-inverse',
-        className ?? 'text-2xl',
+        'w-auto object-contain transition-opacity duration-fast ease-standard hover:opacity-85',
+        onInverse && 'brightness-0 invert',
+        className ?? 'h-6 md:h-7',
       )}
-    >
-      Glow
-    </span>
+    />
   )
 
   if (href === null) return content
 
   return (
-    <Link href={href} aria-label="Glow — trang chủ" className="inline-block">
+    <Link
+      href={href}
+      aria-label="Glow — trang chủ"
+      className="inline-flex items-center"
+    >
       {content}
     </Link>
   )
 }
+

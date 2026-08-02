@@ -15,7 +15,7 @@ export function NavBar() {
   return (
     <header className="hairline-b bg-page">
       <nav className="container-max flex items-center justify-between gap-4 py-3.5 md:py-[11px] lg:gap-6 lg:py-[10px]">
-        <Wordmark className="text-xl md:text-[23px] lg:text-[24px]" />
+        <Wordmark className="h-6 md:h-7 lg:h-7" />
 
         <div className="hidden items-center gap-7 lg:flex lg:gap-[30px]">
           {links.map((link) => (

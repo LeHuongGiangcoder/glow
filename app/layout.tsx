@@ -9,6 +9,11 @@ export const metadata: Metadata = {
   },
   description:
     'Glow thiết kế website cưới cho từng cặp đôi: chọn mẫu có sẵn để làm nhanh, hoặc đặt thiết kế riêng. Kèm quản lý khách mời và Smart RSVP.',
+  icons: {
+    icon: '/glow-logo.png',
+    shortcut: '/glow-logo.png',
+    apple: '/glow-logo.png',
+  },
 }
 
 export default function RootLayout({
