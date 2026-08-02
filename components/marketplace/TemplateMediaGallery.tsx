@@ -39,7 +39,7 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
   if (allImages.length === 0) {
     return (
       <div
-        className="aspect-4/5 w-full min-w-0 rounded-md"
+        className="phone-frame phone-frame-lg min-w-0 rounded-md"
         style={{ background: template.imageColor }}
       />
     )
@@ -48,10 +48,10 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
   const activeUrl = allImages[activeIndex] || allImages[0]
 
   return (
-    <div className="flex w-full min-w-0 flex-col gap-3.5">
+    <div className="phone-frame-stack phone-frame-stack-lg flex w-full min-w-0 flex-col gap-3.5">
       {/* Main Exhibition Stage */}
       <div
-        className="group relative aspect-4/5 w-full cursor-pointer overflow-hidden rounded-md bg-sunken"
+        className="phone-frame phone-frame-lg group relative cursor-pointer overflow-hidden rounded-md bg-sunken"
         onClick={() => setLightboxOpen(true)}
       >
         <Image
@@ -59,8 +59,8 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
           alt={`${template.name} preview ${activeIndex + 1}`}
           fill
           priority
-          sizes="(max-width: 768px) 100vw, 55vw"
-          className="object-cover transition-opacity duration-base ease-standard"
+          sizes="(max-width: 768px) 100vw, 330px"
+          className="object-cover object-top transition-opacity duration-base ease-standard"
         />
         <span className="eyebrow absolute right-3.5 top-3.5 z-10 rounded-pill bg-paper-050/82 px-3 py-1.5 transition-opacity duration-fast ease-standard group-hover:opacity-100 md:opacity-0">
           Phóng to
@@ -78,7 +78,7 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
                 type="button"
                 onClick={() => setActiveIndex(index)}
                 className={cn(
-                  'relative aspect-4/5 w-20 shrink-0 overflow-hidden rounded-sm transition-opacity duration-fast ease-standard md:w-24',
+                  'phone-frame-thumb relative w-20 shrink-0 overflow-hidden rounded-sm transition-opacity duration-fast ease-standard md:w-16',
                   isActive
                     ? 'border-2 border-ink-900 opacity-100'
                     : 'border border-line-strong opacity-60 hover:opacity-100',
@@ -89,8 +89,8 @@ export function TemplateMediaGallery({ template }: { template: Template }) {
                   src={url}
                   alt={`${template.name} thumbnail ${index + 1}`}
                   fill
-                  sizes="96px"
-                  className="object-cover"
+                  sizes="80px"
+                  className="object-cover object-top"
                 />
               </button>
             )

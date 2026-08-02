@@ -34,7 +34,7 @@ export function TemplateGallery({ templates }: { templates: Template[] }) {
           Chưa có mẫu nào khớp. Thử bỏ bớt bộ lọc, hoặc xem thiết kế riêng.
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {visible.map((template) => (
             <TemplateCard key={template.slug} template={template} />
           ))}

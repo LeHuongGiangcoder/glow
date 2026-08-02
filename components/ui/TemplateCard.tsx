@@ -19,14 +19,14 @@ export function TemplateCard({
     <Link
       href={`/templates/${template.slug}`}
       className={cn(
-        'group block overflow-hidden rounded-md bg-card',
+        'phone-frame-stack group block rounded-md bg-card',
         'transition-transform duration-base ease-out',
         'hover:-translate-y-[3px]',
         className,
       )}
     >
       <div
-        className="relative aspect-4/5 overflow-hidden"
+        className="phone-frame relative overflow-hidden rounded-md"
         style={{ background: template.imageColor }}
       >
         {template.coverImageUrl && (
@@ -34,8 +34,8 @@ export function TemplateCard({
             src={template.coverImageUrl}
             alt={template.name}
             fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 268px"
+            className="object-cover object-top"
           />
         )}
         <span
@@ -50,7 +50,7 @@ export function TemplateCard({
           </span>
         )}
       </div>
-      <div className="flex items-baseline justify-between gap-3 px-4.5 py-4">
+      <div className="flex items-baseline justify-between gap-3 px-1 py-3.5">
         <span className="display-card">{template.name}</span>
         <span className="font-body text-sm text-fg">
           {formatVnd(template.priceVnd)}
