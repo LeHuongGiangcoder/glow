@@ -135,14 +135,6 @@ const processSteps: ProcessStep[] = [
   },
 ]
 
-/** PRD F1 — trust bar. PLACEHOLDER figures; PRD F10 sources these from Sanity. */
-const trustStats = [
-  { value: '120+', label: 'Website đã bàn giao' },
-  { value: '12 giờ', label: 'Thời gian phản hồi' },
-  { value: '1–3 ngày', label: 'Bàn giao hoả tốc' },
-  { value: 'Không giới hạn', label: 'Số vòng sửa' },
-]
-
 /** PRD F1 — FAQ. Grouped so the list of eleven reads as three short lists. */
 const faqGroups = [
   {
@@ -334,22 +326,6 @@ export default async function HomePage() {
           <div className="mt-12">
             <ProcessSteps steps={processSteps} />
           </div>
-        </section>
-
-        {/* Trust bar — reference figures, not a claim. Reads as a spec line at
-            the foot of the process: label first, value in body size, no
-            display face and none of the section's usual breathing room. */}
-        <section className="container-max hairline-t py-10">
-          <dl className="grid grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4">
-            {trustStats.map((stat) => (
-              <div key={stat.label}>
-                <dt className="eyebrow text-fg-muted">{stat.label}</dt>
-                <dd className="mt-1.5 font-body text-sm text-fg">
-                  {stat.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
         </section>
 
         {/* Gallery */}

@@ -266,13 +266,8 @@ export default function BespokePage() {
                   <div className="mt-6">
                     <Button
                       href="/book?type=bespoke"
-                      variant={pkg.feature ? 'secondary' : 'primary'}
+                      variant={pkg.feature ? 'inverse' : 'primary'}
                       size="md"
-                      className={
-                        pkg.feature
-                          ? 'border-paper-050 text-paper-050 hover:bg-paper-050 hover:text-ink-900'
-                          : undefined
-                      }
                     >
                       Đặt lịch cho gói này
                     </Button>
