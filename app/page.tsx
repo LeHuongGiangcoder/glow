@@ -208,7 +208,7 @@ export default async function HomePage() {
         {/* Hero — text left, photographs right, bottoms aligned so the two
             frames stagger by their own proportions instead of a nudge. */}
         <section>
-          <div className="container-max grid grid-cols-1 gap-12 pb-14 pt-12 md:pt-20 md:pb-16 lg:grid-cols-12 lg:items-end lg:gap-12 lg:pt-20 lg:pb-20">
+          <div className="container-max grid grid-cols-1 gap-12 pb-14 pt-12 md:pt-20 md:pb-16 lg:grid-cols-12 lg:items-end lg:gap-12 lg:pt-[90px] lg:pb-20">
             <div className="rise-in lg:col-span-5">
               <p className="eyebrow">Wedding Website Studio</p>
               <h1 className="display-hero mt-5">
