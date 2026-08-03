@@ -323,10 +323,35 @@
   }
 
   /* --- Step cards --------------------------------------------------------
-     The four steps laid out in a 2-column grid (2 steps per row). Each card
-     displays its index numeral and title on top, illustration below, and body
-     copy at the foot without requiring interaction. */
+     The four steps read as one line of four on a laptop, so the whole process
+     is scannable without scrolling: stacked on a handset, 2x2 on a tablet,
+     4-up from 64rem. `--step-gap` is declared on the track so the flow arrows
+     can sit exactly half a gutter outside a card and stay in the gutter at
+     every breakpoint. */
+  .step-flow {
+    --step-gap: var(--space-6);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--step-gap);
+  }
+
+  @media (min-width: 48rem) {
+    .step-flow {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .step-flow {
+      --step-gap: var(--space-5);
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Each card displays its index numeral and title on top, illustration below,
+     and body copy at the foot without requiring interaction. */
   .step-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--color-card);
@@ -340,9 +365,92 @@
     border-color: var(--color-line-strong);
   }
 
+  /* The ghost numeral inks in on hover — the one bit of feedback the card
+     needs, done with value rather than a shadow or a lift. */
+  .step-card .index-numeral {
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .step-card:hover .index-numeral {
+    color: var(--color-fg);
+  }
+
+  /* Two lines of title reserved on every card, so the four illustrations line
+     up on the same baseline however long the step is named. */
+  .step-card__head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    min-height: calc(var(--text-lg) * var(--leading-snug) * 2);
+  }
+
+  /* Points are pushed to the foot so the cards' last lines align too. */
+  .step-card__points {
+    margin-top: auto;
+    padding-top: var(--space-5);
+  }
+
   @media (min-width: 48rem) {
     .step-card {
       padding: var(--space-6);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    /* Four to a row the card is narrow; the outer padding comes back down so
+       the illustration keeps its width. */
+    .step-card {
+      padding: var(--space-5);
+    }
+  }
+
+  /* Flow arrow, drawn in the gutter between one step and the next. It points
+     the way the eye should travel: down while the cards stack, across once
+     they sit side by side. Decorative — the numerals carry the real order. */
+  .step-arrow {
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: var(--space-5);
+    height: var(--space-5);
+    color: var(--color-line-strong);
+    background: var(--color-page);
+    pointer-events: none;
+    /* Stacked: centred on the card's bottom edge, pointing down. */
+    left: 50%;
+    bottom: calc(var(--step-gap) / -2);
+    transform: translate(-50%, 50%) rotate(90deg);
+  }
+
+  @media (min-width: 48rem) {
+    /* 2x2: across the gutter, except the card that ends a row, which hands
+       over to the row below. */
+    .step-arrow {
+      left: auto;
+      right: calc(var(--step-gap) / -2);
+      top: 50%;
+      bottom: auto;
+      transform: translate(50%, -50%);
+    }
+
+    .step-card:nth-child(2n) .step-arrow {
+      left: 50%;
+      right: auto;
+      top: auto;
+      bottom: calc(var(--step-gap) / -2);
+      transform: translate(-50%, 50%) rotate(90deg);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    /* One row of four: every arrow points forward. */
+    .step-card:nth-child(2n) .step-arrow {
+      left: auto;
+      right: calc(var(--step-gap) / -2);
+      top: 50%;
+      bottom: auto;
+      transform: translate(50%, -50%);
     }
   }
 

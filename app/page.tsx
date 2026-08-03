@@ -320,8 +320,9 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Process — one rail, four steps read downwards, each with the screen
-            the couple actually sees at that point */}
+        {/* Process — four steps in one row on a laptop, so the whole thing is
+            scannable in a single view, arrows tracing 01 → 04. Each step shows
+            the screen the couple actually sees at that point. */}
         <section className="container-max hairline-t section-y">
           <div className="max-w-[46ch]">
             <p className="eyebrow">Quy trình</p>
