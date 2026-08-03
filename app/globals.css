@@ -56,8 +56,8 @@
   --text-lg: 21px;
   --text-xl: 27px;
   --text-2xl: 36px;
-  --text-3xl: 50px;
-  --text-4xl: 68px;
+  --text-3xl: 44px;
+  --text-4xl: 56px;
   --text-5xl: 96px;
   --text-6xl: initial;
   --text-7xl: initial;
@@ -469,6 +469,56 @@
 
   /* No object-fit here on purpose: callers choose cover or contain, and a
      rule on the descendant would outrank the utility that sets it. */
+
+  /* --- Section header ----------------------------------------------------
+     A left-ranged heading with its standfirst set against the right margin
+     rather than stacked underneath it. Stacked, a 46ch heading left the whole
+     right half of a wide section empty; ranged right, the two blocks bracket
+     the section and the white space falls between them, where it reads as a
+     gutter instead of a gap.
+
+     First child is the heading block (eyebrow + heading), second is the
+     standfirst. Both stay left-aligned internally — only the block moves.
+     Sections built on another layout (the sticky FAQ column, the sunken
+     banners, the hero with photographs) keep their own arrangement. */
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  /* Measure cap applies in both arrangements, so it lives here rather than as
+     a utility repeated on every section. */
+  .section-head > * {
+    max-width: 46ch;
+  }
+
+  @media (min-width: 64rem) {
+    .section-head {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-8);
+      /* Bottoms line up: the standfirst grounds on the heading's last line
+         however many lines either of them runs to. */
+      align-items: end;
+    }
+
+    .section-head > * + * {
+      justify-self: end;
+      /* Ranged right: the standfirst's right edge is the one it shares with
+         the section, so that is the edge the lines are set against. Ragged on
+         the left, where nothing lines up with it anyway. */
+      text-align: right;
+    }
+
+    /* One rung below the standfirst's usual desktop size: ranged right against
+       a display heading it does not need to hold body measure, and stepping
+       down widens the gap between the two voices. Written as a child of
+       `.section-head` rather than on `> * + *` so it outweighs `.lede`'s own
+       desktop step-up, which is declared further down this file. */
+    .section-head > .lede {
+      font-size: var(--text-sm);
+    }
+  }
 
   /* --- Pull quote --------------------------------------------------------
      One line of the proposal allowed to occupy a whole band. Nothing else on

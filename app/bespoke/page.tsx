@@ -200,11 +200,13 @@ export default function BespokePage() {
         {/* Digital experience — the deck's opening argument, three columns
             separated by a rule in the gutter rather than three cards. */}
         <section className="container-max hairline-t section-y">
-          <div className="max-w-[46ch]">
-            <p className="eyebrow">Digital Experience</p>
-            <h2 className="display-section mt-4">
-              Một không gian sống, đầy kỷ niệm
-            </h2>
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">Digital Experience</p>
+              <h2 className="display-section mt-4">
+                Một không gian sống, đầy kỷ niệm
+              </h2>
+            </div>
           </div>
 
           <div className="col-rules mt-12 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6">
@@ -230,10 +232,12 @@ export default function BespokePage() {
 
         {/* Packages */}
         <section id="packages" className="container-max hairline-t section-y">
-          <div className="max-w-[46ch]">
-            <p className="eyebrow">Bảng giá</p>
-            <h2 className="display-section mt-4">Hai gói Bespoke</h2>
-            <p className="lede mt-4">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">Bảng giá</p>
+              <h2 className="display-section mt-4">Hai gói Bespoke</h2>
+            </div>
+            <p className="lede">
               Cả hai đều được thiết kế từ đầu. Khác nhau ở chỗ câu chuyện dừng
               lại ở ngày cưới, hay còn sống tiếp sau đó.
             </p>
@@ -280,14 +284,20 @@ export default function BespokePage() {
 
         {/* Flow */}
         <section className="container-max hairline-t section-y">
-          <div className="max-w-[46ch]">
-            <p className="eyebrow">Quy trình</p>
-            <h2 className="display-section mt-4">
-              Bắt đầu đơn giản, hoàn thiện tới từng chi tiết
-            </h2>
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">Quy trình</p>
+              <h2 className="display-section mt-4">
+                Bắt đầu đơn giản, hoàn thiện tới từng chi tiết
+              </h2>
+            </div>
+            <p className="lede">
+              Quy trình linh hoạt theo từng cặp đôi — bước nào cần thêm thời
+              gian, Glow giãn ra ở bước đó.
+            </p>
           </div>
 
-          <ol className="flow-chain mt-10">
+          <ol className="flow-chain mt-12">
             {flow.map((stage, i) => (
               <li key={stage}>
                 <span className="font-body text-sm text-fg">{stage}</span>
@@ -299,11 +309,6 @@ export default function BespokePage() {
               </li>
             ))}
           </ol>
-
-          <p className="lede mt-8">
-            Quy trình linh hoạt theo từng cặp đôi — bước nào cần thêm thời gian,
-            Glow giãn ra ở bước đó.
-          </p>
         </section>
 
         {/* Reference works */}

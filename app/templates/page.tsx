@@ -19,10 +19,12 @@ export default async function TemplatesPage() {
 
       <main className="flex-1 screen-transition">
         <section className="container-max section-y">
-          <div className="max-w-[46ch]">
-            <p className="eyebrow">Bộ sưu tập</p>
-            <h1 className="display-hero mt-4">Mẫu có sẵn</h1>
-            <p className="lede mt-5">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">Bộ sưu tập</p>
+              <h1 className="display-hero mt-4">Mẫu có sẵn</h1>
+            </div>
+            <p className="lede">
               Cùng một mức giá cho mọi mẫu trong giai đoạn này. Mỗi mẫu đổi được
               nội dung và màu sắc theo bảng màu có sẵn, và đều có bản demo mở
               được ngay.

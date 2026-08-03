@@ -208,7 +208,7 @@ export default async function HomePage() {
         {/* Hero — text left, photographs right, bottoms aligned so the two
             frames stagger by their own proportions instead of a nudge. */}
         <section>
-          <div className="container-max grid grid-cols-1 gap-12 pb-14 pt-10 md:pt-14 lg:grid-cols-12 lg:items-end lg:gap-12 lg:pb-20">
+          <div className="container-max grid grid-cols-1 gap-12 pb-14 pt-12 md:pt-20 md:pb-16 lg:grid-cols-12 lg:items-end lg:gap-12 lg:pt-20 lg:pb-20">
             <div className="rise-in lg:col-span-5">
               <p className="eyebrow">Wedding Website Studio</p>
               <h1 className="display-hero mt-5">
@@ -316,11 +316,13 @@ export default async function HomePage() {
             scannable in a single view, arrows tracing 01 → 04. Each step shows
             the screen the couple actually sees at that point. */}
         <section className="container-max hairline-t section-y">
-          <div className="max-w-[46ch]">
-            <p className="eyebrow">Quy trình</p>
-            <h2 className="display-section mt-4">
-              Website của hai bạn ra đời thế nào
-            </h2>
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">Quy trình</p>
+              <h2 className="display-section mt-4">
+                Website của hai bạn ra đời thế nào
+              </h2>
+            </div>
           </div>
 
           <div className="mt-12">
@@ -330,13 +332,11 @@ export default async function HomePage() {
 
         {/* Gallery */}
         <section className="container-max hairline-t section-y">
-          <div className="mb-10 max-w-[46ch]">
-            <p className="eyebrow">Bộ sưu tập</p>
-            <h2 className="display-section mt-4">Chọn mẫu hợp gu của bạn</h2>
-            <p className="lede mt-4">
-              Cùng một mức giá cho mọi mẫu trong giai đoạn này. Mỗi mẫu đều đổi
-              được nội dung và màu sắc theo bảng màu có sẵn.
-            </p>
+          <div className="section-head mb-10">
+            <div>
+              <p className="eyebrow">Bộ sưu tập</p>
+              <h2 className="display-section mt-4">Chọn mẫu hợp gu của bạn</h2>
+            </div>
           </div>
 
           <TemplateGallery templates={templates} />
