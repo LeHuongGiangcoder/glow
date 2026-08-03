@@ -30,6 +30,9 @@
   --color-fg: var(--color-ink-900);
   --color-fg-muted: var(--color-ink-500);
   --color-fg-inverse: #ffffff;
+  /* Muted copy on an ink surface. The gray ramp is mixed for paper and goes
+     muddy on black, so the inverse pair is stated as an alpha instead. */
+  --color-fg-inverse-muted: rgba(255, 255, 255, 0.66);
   --color-line: var(--color-warm-gray-100);
   --color-line-strong: var(--color-warm-gray-300);
   --color-line-inverse: rgba(255, 255, 255, 0.24);
@@ -466,6 +469,114 @@
 
   /* No object-fit here on purpose: callers choose cover or contain, and a
      rule on the descendant would outrank the utility that sets it. */
+
+  /* --- Pull quote --------------------------------------------------------
+     One line of the proposal allowed to occupy a whole band. Nothing else on
+     the page is centred, which is exactly why this reads as a caption to the
+     section rather than another heading in the stack. */
+  .pull-quote {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    font-style: italic;
+    line-height: var(--leading-snug);
+    text-align: center;
+    text-wrap: balance;
+    color: var(--color-fg);
+  }
+
+  @media (min-width: 48rem) {
+    .pull-quote {
+      font-size: var(--text-xl);
+    }
+  }
+
+  /* --- Package cards -----------------------------------------------------
+     Two tiers side by side. The higher tier is not marked by a badge or a
+     colour — the system has neither — but by being the one card printed on
+     ink, which is also how the film strip separates itself from the page. */
+  .price-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    transition: border-color var(--duration-base) var(--ease-out);
+  }
+
+  .price-card:hover {
+    border-color: var(--color-line-strong);
+  }
+
+  @media (min-width: 48rem) {
+    .price-card {
+      padding: var(--space-7);
+    }
+  }
+
+  .price-amount {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    color: var(--color-fg);
+  }
+
+  /* The ink variant. Every type class in the system states its own colour, so
+     the surface has to restate them rather than rely on inheritance. */
+  .price-card-feature {
+    background: var(--color-inverse);
+    border-color: var(--color-inverse);
+  }
+
+  .price-card-feature:hover {
+    border-color: var(--color-line-strong);
+  }
+
+  .price-card-feature .display-card,
+  .price-card-feature .eyebrow,
+  .price-card-feature .price-amount,
+  .price-card-feature .key {
+    color: var(--color-fg-inverse);
+  }
+
+  .price-card-feature .lede,
+  .price-card-feature .point-list > li {
+    color: var(--color-fg-inverse-muted);
+  }
+
+  .price-card-feature .point-list > li::before {
+    background: var(--color-line-inverse);
+  }
+
+  .price-card-feature .hairline-t {
+    border-top-color: var(--color-line-inverse);
+  }
+
+  /* --- Flow chain --------------------------------------------------------
+     A process stated as one line of stages rather than four cards: used where
+     the steps are handshakes, not screens worth showing. Wraps into as many
+     lines as the viewport needs, chevrons staying with their stage. */
+  .flow-chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .flow-chain > li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .flow-chain .flow-chain__sep {
+    color: var(--color-line-strong);
+  }
 
   /* --- Form controls ----------------------------------------------------
      Fields are ruled lines, not boxes: filling the booking form should feel

@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { ComponentProps, ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'inverse'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 /**
@@ -30,6 +30,10 @@ const variants: Record<ButtonVariant, string> = {
     'bg-transparent text-ink-900 border-ink-900 hover:bg-ink-900 hover:text-fg-inverse',
   ghost:
     'bg-transparent text-fg border-transparent hover:bg-ink-900/6',
+  // For ink surfaces (the featured package card). Hover still only ever goes
+  // heavier: the paper fill steps down a tone rather than lighting up.
+  inverse:
+    'bg-paper-050 text-ink-900 border-paper-050 hover:bg-paper-100 hover:border-paper-100',
 }
 
 type CommonProps = {

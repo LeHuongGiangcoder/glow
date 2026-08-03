@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { Chevron } from '@/components/ui/Chevron'
 
 export type ProcessStep = {
   title: string
@@ -13,18 +14,7 @@ export type ProcessStep = {
 function FlowArrow() {
   return (
     <span className="step-arrow" aria-hidden="true">
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M1.5 7h11M8 2.5 12.5 7 8 11.5" />
-      </svg>
+      <Chevron />
     </span>
   )
 }

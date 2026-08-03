@@ -283,7 +283,7 @@ export default async function HomePage() {
                   <div
                     key={`${copy}-${frame.src}`}
                     // Square-ish corners: film frames are cut, not rounded.
-                    className="photo aspect-[4/5] w-[128px] rounded-sm md:w-[168px]"
+                    className="photo aspect-[4/5] w-[144px] rounded-sm md:w-[200px]"
                   >
                     <Image
                       src={frame.src}
@@ -291,9 +291,9 @@ export default async function HomePage() {
                       aria-hidden={copy === 1}
                       fill
                       // The track never stops moving, so a lazy frame would
-                      // drift into view still empty. They are ~170px wide.
+                      // drift into view still empty. They are ~200px wide.
                       loading="eager"
-                      sizes="168px"
+                      sizes="(max-width: 768px) 144px, 200px"
                     />
                   </div>
                 )),
