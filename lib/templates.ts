@@ -38,7 +38,7 @@ export type Template = {
   sections: string[]
   /** PRD F3: per-template inclusions. The fixed two live in TEMPLATE_ALWAYS_INCLUDED. */
   includes: string[]
-  demoUrl: string
+  demoUrl?: string
 }
 
 /** PRD F3: fixed copy shared by every template — not a per-template Sanity field. */

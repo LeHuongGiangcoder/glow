@@ -1,42 +1,137 @@
-import Link from 'next/link'
+import Image from 'next/image'
+import type { CSSProperties } from 'react'
 import { Accordion, AccordionItem } from '@/components/ui/Accordion'
 import { Button } from '@/components/ui/Button'
 import { Footer } from '@/components/ui/Footer'
 import { NavBar } from '@/components/ui/NavBar'
+import { ProcessSteps, type ProcessStep } from '@/components/marketing/ProcessSteps'
 import { TemplateGallery } from '@/components/marketplace/TemplateGallery'
+import { cn } from '@/lib/cn'
 import { getTemplates } from '@/lib/templates'
 
-/** PRD F1 — three value props. */
+/** PRD F1 — three value props, stated inside the hero rather than as their own
+    section. Creative entrance leads: it is the thing no template shop offers. */
 const valueProps = [
   {
-    title: 'Mẫu đẹp có sẵn, xem demo thật',
-    body: 'Mỗi mẫu đều có bản demo mở được ngay, không phải đoán qua ảnh chụp. Không thấy mẫu hợp gu thì đặt thiết kế riêng.',
+    title: 'Creative entrance',
+    points: [
+      'Mở đầu bằng một thứ thuộc về riêng hai bạn',
+      'Phím đàn piano, ống kính máy ảnh, nét cọ vẽ, chiếc đĩa than',
+      'Mỗi cặp đôi một cách vào, không lặp lại',
+    ],
   },
   {
-    title: 'Quản lý khách mời theo nhóm',
-    body: 'Chia nhà trai, nhà gái, bạn bè, đồng nghiệp. Gộp cả gia đình thành một lời mời, gửi link riêng cho từng nhóm.',
+    title: 'Theo dõi khách mời',
+    points: [
+      'Biết ai đã mở thiệp, ai đã trả lời, ai còn để ngỏ',
+      'Chia nhà trai, nhà gái, bạn bè, đồng nghiệp',
+      'Link mời riêng cho từng nhóm',
+    ],
   },
   {
     title: 'Smart RSVP',
-    body: 'Khách gõ tên là hệ thống tự nhận ra cả nhà. Câu hỏi đổi theo từng nhóm, trả lời ghi thẳng vào đúng bản ghi.',
+    points: [
+      'Khách gõ tên, hệ thống nhận ra cả nhà',
+      'Câu hỏi đổi theo từng nhóm khách',
+      'Câu trả lời ghi thẳng vào đúng bản ghi',
+    ],
   },
 ]
 
-/** PRD F1 — the branch point. Two cards, deliberately equal in weight. */
-const branches = [
+/** The hero standfirst, broken into points so it is read rather than skimmed
+    past — same list treatment as the sections below it. */
+const heroPoints = [
+  // Kept under ~40 characters: a wrapped hero bullet reads as a paragraph
+  // again, which is the thing the list was meant to break up.
+  'Mang câu chuyện riêng của từng cặp đôi',
+  'Mở nhanh, mượt trên mọi thiết bị',
+  'Dễ dùng cho cả hai bạn lẫn khách mời',
+]
+
+/** Shown under the hero frames. */
+const heroCaption = 'Mỗi cặp đôi mở đầu bằng một thứ của riêng mình.'
+
+/** The three frames beside the headline. The tall one carries the hero. */
+const heroFrames = [
   {
-    href: '/templates',
-    eyebrow: 'Mẫu có sẵn',
-    title: 'Xem mẫu có sẵn',
-    body: 'Giá công khai, chọn xong là bắt đầu. Trung bình 7–10 ngày, hoặc hoả tốc 1–3 ngày.',
-    cta: 'Xem bộ sưu tập',
+    src: '/hero/wed1.webp',
+    alt: 'Hai bàn tay trao nhẫn cưới',
+    /** Equal widths made three near-equal frames; the lead frame takes more so
+        the cluster has a subject instead of three siblings. */
+    shape: 'flex-[1] aspect-[4/5]',
+    /** Only the lead frame survives on a handset. */
+    handset: false,
   },
   {
-    href: '/bespoke',
-    eyebrow: 'Bespoke',
-    title: 'Thiết kế riêng — Bespoke',
-    body: 'Thiết kế từ đầu theo câu chuyện của bạn, không giới hạn bố cục có sẵn. Giá nằm trong bản Proposal xem công khai.',
-    cta: 'Xem Proposal',
+    src: '/hero/wed4.webp',
+    alt: 'Cô dâu chú rể dưới tấm voan bay trong nắng',
+    shape: 'flex-[1.5] aspect-[3/4]',
+    handset: true,
+  },
+  {
+    src: '/hero/wed7.webp',
+    alt: 'Cô dâu chú rể nắm tay nhau bước lên bậc thang',
+    shape: 'flex-[1] aspect-[4/5]',
+    handset: false,
+  },
+]
+
+/** Contact sheet drifting under the hero. Order alternates close-ups with
+    wider frames so no two similar crops sit next to each other. */
+const heroStrip = [
+  { src: '/hero/wed13.webp', alt: 'Cô dâu chú rể sát bên nhau trong ánh sáng dịu' },
+  { src: '/hero/wed3.webp', alt: 'Nụ hôn dưới nền trời' },
+  { src: '/hero/wed16.webp', alt: 'Cô dâu chú rể trên chiếc xe mui trần' },
+  { src: '/hero/wed8.webp', alt: 'Đôi tay cô dâu với nhẫn cưới' },
+  { src: '/hero/wed5.webp', alt: 'Bóng cô dâu chú rể giữa cánh hoa bay' },
+  { src: '/hero/wed12.webp', alt: 'Chú rể buộc dây giày cho cô dâu' },
+  { src: '/hero/wed14.webp', alt: 'Cô dâu chú rể băng qua đường phố' },
+  { src: '/hero/wed11.webp', alt: 'Khui rượu mừng bên tháp ly' },
+  { src: '/hero/wed6.webp', alt: 'Cô dâu chú rể trong tấm voan dài' },
+  { src: '/hero/wed15.webp', alt: 'Cô dâu chú rể trên con đường vắng' },
+  { src: '/hero/wed17.webp', alt: 'Nhìn từ trên xuống chiếc xe cưới' },
+  { src: '/hero/wed9.webp', alt: 'Cô dâu chú rể khoe nhẫn cưới' },
+]
+
+/** The four steps between choosing a template and going live. Each bullet
+    leads with the keyword; the copy is kept to one line per bullet so all four
+    steps and the illustration panel fit one screen. */
+const processSteps: ProcessStep[] = [
+  {
+    title: 'Chọn mẫu',
+    image: '/step/1.png',
+    alt: 'Trang chi tiết một mẫu website cưới, con trỏ đang bấm nút Chọn mẫu này',
+    points: [
+      ['Demo thật', 'mở được ngay, không đoán qua ảnh'],
+      ['Giá công khai', 'chưa cần thanh toán ở bước này'],
+    ],
+  },
+  {
+    title: 'Meeting 15 phút',
+    image: '/step/2.png',
+    alt: 'Form đặt lịch buổi Intro 15 phút qua Google Meet',
+    points: [
+      ['Chốt thông tin', 'tên, ngày giờ, địa điểm, ảnh'],
+      ['Cách mở đầu', 'trang sẽ mở ra bằng điều gì'],
+    ],
+  },
+  {
+    title: 'Glow tinh chỉnh',
+    image: '/step/3.png',
+    alt: 'Hình vẽ một đầu bếp đang nêm nếm món ăn',
+    points: [
+      ['Đúng mẫu đã chọn', 'không dựng lại từ đầu'],
+      ['Sửa không giới hạn', 'tới khi hai bạn ưng'],
+    ],
+  },
+  {
+    title: 'Bàn giao',
+    image: '/step/4.png',
+    alt: 'Thanh địa chỉ tên miền riêng của cặp đôi và bảng danh sách khách mời đã trả lời',
+    points: [
+      ['Link website', 'kèm dashboard khách mời'],
+      ['7–10 ngày', 'hoả tốc 1–3 ngày'],
+    ],
   },
 ]
 
@@ -55,7 +150,7 @@ const faqGroups = [
     items: [
       {
         q: 'Đặt lịch xong thì chuyện gì xảy ra?',
-        a: 'Glow liên hệ xác nhận trong vòng 12 giờ. Buổi meeting 30–45 phút qua Google Meet để thu thập nội dung, ảnh, và thanh toán. Sau đó Glow bắt tay vào làm ngay.',
+        a: 'Glow liên hệ xác nhận trong vòng 12 giờ. Buổi meeting 15 phút qua Google Meet để chốt nội dung, ảnh, và thanh toán. Sau đó Glow bắt tay vào làm ngay.',
       },
       {
         q: 'Bao lâu thì xong?',
@@ -118,72 +213,142 @@ export default async function HomePage() {
       <NavBar />
 
       <main className="flex-1 screen-transition">
-        {/* Hero */}
-        <section className="container-narrow section-y text-center">
-          <p className="eyebrow">Wedding Website Studio</p>
-          <h1 className="display-hero mt-4">
-            Câu chuyện của bạn, kể thật đẹp.
-          </h1>
-          <p className="lede mx-auto mt-6 max-w-[46ch]">
-            Glow làm website cưới thiết kế riêng cho từng cặp đôi, và có sẵn
-            những mẫu đẹp để bạn chọn nhanh. Một nơi yên tĩnh để khách mời tìm
-            thấy đúng điều cần biết.
-          </p>
-          <div className="mt-9 flex flex-wrap justify-center gap-4">
-            <Button href="/templates" variant="primary" size="lg">
-              Xem mẫu có sẵn
-            </Button>
-            <Button href="/bespoke" variant="secondary" size="lg">
-              Thiết kế riêng
-            </Button>
-          </div>
-        </section>
+        {/* Hero — text left, photographs right, bottoms aligned so the two
+            frames stagger by their own proportions instead of a nudge. */}
+        <section>
+          <div className="container-max grid grid-cols-1 gap-12 pb-14 pt-10 md:pt-14 lg:grid-cols-12 lg:items-end lg:gap-12 lg:pb-20">
+            <div className="rise-in lg:col-span-5">
+              <p className="eyebrow">Wedding Website Studio</p>
+              <h1 className="display-hero mt-5">
+                Chia sẻ đám cưới theo cách của hai bạn.
+              </h1>
+              <ul className="point-list mt-6 max-w-[40ch]">
+                {heroPoints.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+              <div className="mt-9 flex flex-wrap gap-4">
+                <Button href="/templates" variant="primary" size="lg">
+                  Xem mẫu có sẵn
+                </Button>
+                <Button href="/book" variant="secondary" size="lg">
+                  Đặt lịch 15 phút
+                </Button>
+              </div>
+            </div>
 
-        {/* Value props */}
-        <section className="container-max hairline-t section-y">
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+            {/* One frame on a handset — three 100px frames are thumbnails, not
+                photographs. The cluster returns from md up, bottoms aligned so
+                the frames stagger by their own proportions. */}
+            <figure
+              className="rise-in m-0 lg:col-span-7"
+              style={{ '--rise-delay': '120ms' } as CSSProperties}
+            >
+              <div className="flex items-end gap-4 md:gap-5">
+                {heroFrames.map((frame) => (
+                  <div
+                    key={frame.src}
+                    className={cn(
+                      'photo rounded-md',
+                      frame.shape,
+                      !frame.handset && 'hidden md:block',
+                    )}
+                  >
+                    <Image
+                      src={frame.src}
+                      alt={frame.alt}
+                      fill
+                      // All three are above the fold; only the tall one, which
+                      // is also the handset's single frame, gets the LCP hint.
+                      priority={frame.handset}
+                      loading={frame.handset ? undefined : 'eager'}
+                      sizes="(max-width: 768px) 90vw, (max-width: 1024px) 30vw, 260px"
+                    />
+                  </div>
+                ))}
+              </div>
+              <figcaption className="lede mt-4 text-xs italic">
+                {heroCaption}
+              </figcaption>
+            </figure>
+          </div>
+
+          {/* Contact sheet — full-bleed, drifting slowly on a strip of film.
+              Duplicated once so the loop has something to wrap onto; the copy
+              is decorative. */}
+          <div className="marquee film-strip">
+            <div className="marquee-track">
+              {[0, 1].map((copy) =>
+                heroStrip.map((frame) => (
+                  <div
+                    key={`${copy}-${frame.src}`}
+                    // Square-ish corners: film frames are cut, not rounded.
+                    className="photo aspect-[4/5] w-[128px] rounded-sm md:w-[168px]"
+                  >
+                    <Image
+                      src={frame.src}
+                      alt={copy === 0 ? frame.alt : ''}
+                      aria-hidden={copy === 1}
+                      fill
+                      // The track never stops moving, so a lazy frame would
+                      // drift into view still empty. They are ~170px wide.
+                      loading="eager"
+                      sizes="168px"
+                    />
+                  </div>
+                )),
+              )}
+            </div>
+          </div>
+
+          {/* Value props sit inside the hero — three lines, no section of
+              their own, so the process below stays one scroll away. */}
+          <div className="col-rules container-max hairline-t grid grid-cols-1 gap-8 py-12 md:grid-cols-3 md:gap-6">
             {valueProps.map((prop, i) => (
               <div key={prop.title}>
-                <p className="eyebrow text-fg-muted">
+                <p className="index-numeral">
                   {String(i + 1).padStart(2, '0')}
                 </p>
-                <h2 className="display-card mt-4">{prop.title}</h2>
-                <p className="lede mt-3">{prop.body}</p>
+                <h2 className="display-card mt-3.5">{prop.title}</h2>
+                <ul className="point-list mt-4">
+                  {prop.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Branch point — neither card outranks the other */}
+        {/* Process — one rail, four steps read downwards, each with the screen
+            the couple actually sees at that point */}
         <section className="container-max hairline-t section-y">
-          <div className="grid grid-cols-1 gap-7 md:grid-cols-2">
-            {branches.map((branch) => (
-              <Link
-                key={branch.href}
-                href={branch.href}
-                className="group flex flex-col rounded-md bg-card p-8 transition-transform duration-base ease-out hover:-translate-y-[3px] md:p-12"
-              >
-                <p className="eyebrow text-fg-muted">{branch.eyebrow}</p>
-                <h2 className="display-section mt-4">{branch.title}</h2>
-                <p className="lede mt-4 flex-1">{branch.body}</p>
-                <span className="mt-8 font-body text-sm tracking-wide text-fg">
-                  {branch.cta} →
-                </span>
-              </Link>
-            ))}
+          <div className="max-w-[46ch]">
+            <p className="eyebrow">Quy trình</p>
+            <h2 className="display-section mt-4">
+              Website của hai bạn ra đời thế nào
+            </h2>
+          </div>
+
+          <div className="mt-12">
+            <ProcessSteps steps={processSteps} />
           </div>
         </section>
 
-        {/* Trust bar */}
-        <section className="container-max hairline-t section-y">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        {/* Trust bar — reference figures, not a claim. Reads as a spec line at
+            the foot of the process: label first, value in body size, no
+            display face and none of the section's usual breathing room. */}
+        <section className="container-max hairline-t py-10">
+          <dl className="grid grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4">
             {trustStats.map((stat) => (
               <div key={stat.label}>
-                <p className="display-card">{stat.value}</p>
-                <p className="eyebrow mt-2 text-fg-muted">{stat.label}</p>
+                <dt className="eyebrow text-fg-muted">{stat.label}</dt>
+                <dd className="mt-1.5 font-body text-sm text-fg">
+                  {stat.value}
+                </dd>
               </div>
             ))}
-          </div>
+          </dl>
         </section>
 
         {/* Gallery */}

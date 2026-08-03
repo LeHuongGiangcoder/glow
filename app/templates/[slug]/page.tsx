@@ -4,13 +4,12 @@ import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Footer } from '@/components/ui/Footer'
 import { NavBar } from '@/components/ui/NavBar'
+import { RelatedTemplates } from '@/components/marketplace/RelatedTemplates'
 import { TemplateMediaGallery } from '@/components/marketplace/TemplateMediaGallery'
 import {
   formatVnd,
   getTemplate,
   getTemplates,
-  TEMPLATE_ALWAYS_INCLUDED,
-  TEMPLATE_NOT_INCLUDED,
 } from '@/lib/templates'
 
 export async function generateStaticParams() {
@@ -35,7 +34,10 @@ export default async function TemplateDetailPage(
   props: PageProps<'/templates/[slug]'>,
 ) {
   const { slug } = await props.params
-  const template = await getTemplate(slug)
+  const [template, templates] = await Promise.all([
+    getTemplate(slug),
+    getTemplates(),
+  ])
   if (!template) notFound()
 
   const bookHref = `/book?type=template&template=${template.slug}`
@@ -73,14 +75,16 @@ export default async function TemplateDetailPage(
               <Button href={bookHref} variant="primary" size="lg">
                 Chọn mẫu này
               </Button>
-              <a
-                href={template.demoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-pill border border-ink-900 px-[34px] py-4 font-body text-base tracking-wide text-ink-900 no-underline transition-colors duration-fast ease-standard hover:bg-ink-900 hover:text-fg-inverse"
-              >
-                Xem demo thật
-              </a>
+              {template.demoUrl ? (
+                <a
+                  href={template.demoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-pill border border-ink-900 px-[34px] py-4 font-body text-base tracking-wide text-ink-900 no-underline transition-colors duration-fast ease-standard hover:bg-ink-900 hover:text-fg-inverse"
+                >
+                  Xem demo thật
+                </a>
+              ) : null}
             </div>
 
             <p className="lede mt-5 hidden text-xs lg:block">
@@ -122,37 +126,7 @@ export default async function TemplateDetailPage(
           </div>
         </div>
 
-        {/* What's included / not included — PRD F3 */}
-        <section className="container-max hairline-t section-y">
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-            <div>
-              <h2 className="display-section">Bao gồm</h2>
-              <ul className="mt-6 list-none space-y-3.5 p-0">
-                {[...TEMPLATE_ALWAYS_INCLUDED, ...template.includes].map((item) => (
-                  <li key={item} className="lede flex gap-3">
-                    <span aria-hidden className="text-fg">
-                      —
-                    </span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h2 className="display-section">Không bao gồm</h2>
-              <ul className="mt-6 list-none space-y-3.5 p-0">
-                {TEMPLATE_NOT_INCLUDED.map((item) => (
-                  <li key={item} className="lede flex gap-3">
-                    <span aria-hidden className="text-fg-muted">
-                      —
-                    </span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
+        <RelatedTemplates current={template} templates={templates} />
       </main>
 
       {/* PRD F3: sticky CTA pinned to the bottom of the screen on mobile */}

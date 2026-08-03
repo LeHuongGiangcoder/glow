@@ -116,7 +116,6 @@ export const templateType = defineType({
       name: 'demoUrl',
       title: 'Đường dẫn Demo',
       type: 'string',
-      validation: (rule) => rule.required(),
     }),
   ],
   preview: {
