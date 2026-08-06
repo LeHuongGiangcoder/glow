@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
 import { fontVariables } from './fonts'
 import './globals.css'
 
@@ -24,7 +25,10 @@ export default function RootLayout({
   // PRD F11 makes Vietnamese the default locale; `/en` routing comes later.
   return (
     <html lang="vi" className={`${fontVariables} h-full`}>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
