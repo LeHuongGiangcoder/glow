@@ -2,7 +2,6 @@ import Image from 'next/image'
 import type { Metadata } from 'next'
 import type { CSSProperties } from 'react'
 import { Button } from '@/components/ui/Button'
-import { Chevron } from '@/components/ui/Chevron'
 import { Footer } from '@/components/ui/Footer'
 import { NavBar } from '@/components/ui/NavBar'
 import { cn } from '@/lib/cn'
@@ -105,14 +104,50 @@ const packages: Package[] = [
   },
 ]
 
-/** Deck slide 12. Stages, not screens — stated as one line rather than cards. */
-const flow = [
-  'Brief',
-  'Bản thiết kế đầu',
-  'Feedback',
-  'Đặt cọc',
-  'Hoàn thiện',
-  'Bàn giao',
+/** Deck slide 12. Bespoke stages structured as interactive step cards with deliverable details and flexibility notes. */
+const bespokeProcess = [
+  {
+    title: 'Brief & Moodboard',
+    points: [
+      ['Lắng nghe', 'câu chuyện tình yêu, phong cách và ý tưởng riêng'],
+      ['Định hình', 'moodboard, tông màu và cảm xúc chủ đạo'],
+    ] as [string, string][],
+  },
+  {
+    title: 'Bản thiết kế đầu',
+    points: [
+      ['3–5 ngày', 'hoàn thiện bản thiết kế giao diện đầu tiên'],
+      ['Trực quan', 'bố cục hoàn chỉnh từ lời mời đến lịch trình'],
+    ] as [string, string][],
+  },
+  {
+    title: 'Feedback & Tinh chỉnh',
+    points: [
+      ['Trao đổi', 'cùng hai bạn rà soát từng chi tiết và câu chữ'],
+      ['Linh hoạt', 'giãn thời gian bất cứ lúc nào cần suy nghĩ thêm'],
+    ] as [string, string][],
+  },
+  {
+    title: 'Đặt cọc & Phát triển',
+    points: [
+      ['Xác nhận', 'chốt phương án thiết kế chính thức và đặt cọc'],
+      ['Lập trình', 'phát triển trang web và dashboard quản lý khách'],
+    ] as [string, string][],
+  },
+  {
+    title: 'Hoàn thiện & Kiểm thử',
+    points: [
+      ['Mượt mà', 'tối ưu hiển thị và tốc độ trên mọi dòng máy'],
+      ['Tính năng', 'kiểm thử form RSVP và các tương tác trải nghiệm'],
+    ] as [string, string][],
+  },
+  {
+    title: 'Bàn giao & Đồng hành',
+    points: [
+      ['Tên miền riêng', 'chính thức bàn giao website hoàn thiện'],
+      ['Trực chiến', 'đội ngũ hỗ trợ kỹ thuật xuyên suốt ngày cưới'],
+    ] as [string, string][],
+  },
 ]
 
 /** Two frames, not the landing page's three: this page opens on a claim, so
@@ -297,18 +332,26 @@ export default function BespokePage() {
             </p>
           </div>
 
-          <ol className="flow-chain mt-12">
-            {flow.map((stage, i) => (
-              <li key={stage}>
-                <span className="font-body text-sm text-fg">{stage}</span>
-                {i < flow.length - 1 && (
-                  <span className="flow-chain__sep">
-                    <Chevron size={12} />
+          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+            {bespokeProcess.map((step, i) => (
+              <article key={step.title} className="step-card">
+                <div className="step-card__head">
+                  <span className="index-numeral">
+                    {String(i + 1).padStart(2, '0')}
                   </span>
-                )}
-              </li>
+                  <h3 className="display-card">{step.title}</h3>
+                </div>
+
+                <ul className="point-list step-card__points">
+                  {step.points.map(([keyword, rest]) => (
+                    <li key={keyword}>
+                      <span className="key">{keyword}</span> — {rest}
+                    </li>
+                  ))}
+                </ul>
+              </article>
             ))}
-          </ol>
+          </div>
         </section>
 
         {/* Reference works */}

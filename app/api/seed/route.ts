@@ -22,7 +22,6 @@ export async function GET() {
           _type: 'slug',
           current: item.slug,
         },
-        mood: item.mood,
         styleTags: item.styleTags,
         priceVnd: item.priceVnd,
         imageColor: item.imageColor,

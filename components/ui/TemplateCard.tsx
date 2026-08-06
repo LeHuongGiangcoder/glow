@@ -4,6 +4,30 @@ import { cn } from '@/lib/cn'
 import { formatVnd, type Template } from '@/lib/templates'
 
 /**
+ * Minimal stroke icon, 2px, no fill — the system's only icon convention.
+ * A bolt: the express-order badge reduced to its one idea, because the card is
+ * already carrying a name, a price and a cover it needs you to actually look at.
+ */
+function BoltIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="shrink-0"
+    >
+      <path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12l1-8.5z" />
+    </svg>
+  )
+}
+
+/**
  * Gallery card. Hover lifts 3px — no shadow, never a border colour change.
  * PRD F2 also calls for a hover video/GIF preview on desktop;
  * that arrives with real template media.
@@ -38,23 +62,28 @@ export function TemplateCard({
             className="object-cover object-top"
           />
         )}
-        <span
-          className="eyebrow absolute left-3.5 top-3.5 z-10 rounded-pill bg-paper-050/82 px-2.5 py-1"
-          // Translucent paper tint is the system's only use of transparency.
-        >
-          {template.mood}
-        </span>
         {template.expressAvailable && (
-          <span className="eyebrow absolute bottom-3.5 left-3.5 z-10 rounded-pill bg-paper-050/82 px-2.5 py-1">
-            Còn nhận hoả tốc
+          <span
+            // Translucent paper tint is the system's only use of transparency.
+            className="absolute left-3.5 top-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-pill bg-paper-050/82 text-fg"
+            title="Còn nhận hoả tốc (1–3 ngày)"
+          >
+            <BoltIcon />
+            <span className="sr-only">Còn nhận hoả tốc</span>
           </span>
         )}
       </div>
-      <div className="flex items-baseline justify-between gap-3 px-1 py-3.5">
-        <span className="display-card">{template.name}</span>
-        <span className="font-body text-sm text-fg">
+      {/* Stacked, not a baseline row: names carry SEO keywords and run long, and
+          a row let them wrap to five lines while shoving the price into its own
+          orphaned column. One clamped line, price beneath — every card in the
+          grid now ends at the same height. */}
+      <div className="px-1 py-3.5">
+        <p className="display-card truncate" title={template.name}>
+          {template.name}
+        </p>
+        <p className="mt-1.5 font-body text-sm text-fg">
           {formatVnd(template.priceVnd)}
-        </span>
+        </p>
       </div>
     </Link>
   )

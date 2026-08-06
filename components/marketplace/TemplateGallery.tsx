@@ -14,10 +14,12 @@ export function TemplateGallery({ templates }: { templates: Template[] }) {
     const q = query.trim().toLowerCase()
     return templates.filter((t) => {
       const matchesStyle = style === 'Tất cả' || t.styleTags.includes(style)
+      // Style tags are no longer shown anywhere, but they still answer a typed
+      // "lãng mạn" — which is the whole reason the field survived.
       const matchesQuery =
         q === '' ||
         t.name.toLowerCase().includes(q) ||
-        t.mood.toLowerCase().includes(q)
+        t.styleTags.some((tag) => tag.toLowerCase().includes(q))
       return matchesStyle && matchesQuery
     })
   }, [templates, style, query])

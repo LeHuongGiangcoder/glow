@@ -9,6 +9,49 @@ export type ProcessStep = {
   points: [string, string][]
 }
 
+/** The four steps between choosing a template and going live. Each bullet
+    leads with the keyword; the copy is kept to one line per bullet so all four
+    steps and the illustration panel fit one screen. Shared by the home page and
+    every template detail page — the process is the same either way. */
+export const PROCESS_STEPS: ProcessStep[] = [
+  {
+    title: 'Chọn mẫu',
+    image: '/step/1.png',
+    alt: 'Trang chi tiết một mẫu website cưới, con trỏ đang bấm nút Chọn mẫu này',
+    points: [
+      ['Demo thật', 'mở được ngay, không đoán qua ảnh'],
+      ['Giá công khai', 'chưa cần thanh toán ở bước này'],
+    ],
+  },
+  {
+    title: 'Meeting 15 phút',
+    image: '/step/2.png',
+    alt: 'Form đặt lịch buổi Intro 15 phút qua Google Meet',
+    points: [
+      ['Chốt thông tin', 'tên, ngày giờ, địa điểm, ảnh'],
+      ['Cách mở đầu', 'trang sẽ mở ra bằng điều gì'],
+    ],
+  },
+  {
+    title: 'Glow tinh chỉnh',
+    image: '/step/3.png',
+    alt: 'Hình vẽ một đầu bếp đang nêm nếm món ăn',
+    points: [
+      ['Đúng mẫu đã chọn', 'không dựng lại từ đầu'],
+      ['Sửa không giới hạn', 'tới khi hai bạn ưng'],
+    ],
+  },
+  {
+    title: 'Bàn giao',
+    image: '/step/4.png',
+    alt: 'Thanh địa chỉ tên miền riêng của cặp đôi và bảng danh sách khách mời đã trả lời',
+    points: [
+      ['Link website', 'kèm dashboard khách mời'],
+      ['7–10 ngày', 'hoả tốc 1–3 ngày'],
+    ],
+  },
+]
+
 /** Chevron sitting in the gutter between two steps. Rotated by `.step-arrow`
     per breakpoint, so it always points at the step that comes next. */
 function FlowArrow() {

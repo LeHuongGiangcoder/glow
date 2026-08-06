@@ -143,6 +143,16 @@
   --frame-phone-ratio: 9 / 16;
   --frame-phone-w: 268px;
   --frame-phone-w-lg: 330px;
+  /* The detail-page stage is the one frame sized by HEIGHT rather than width.
+     A 9:16 frame handed a wide column grows past the fold — at 400px wide it
+     stood 711px tall — and a preview you have to scroll defeats the point of a
+     preview. Cap the height, let the ratio decide the width. */
+  --frame-stage-h: 600px;
+  /* Width of the vertical thumbnail rail. Sized so a 9:16 thumb clears a tap
+     target. */
+  --frame-rail-w: 68px;
+  /* Prev/next buttons, which sit outside the stage rather than over it. */
+  --frame-nav-w: 44px;
 
   --surface-page: var(--color-page);
   --surface-card: var(--color-card);
@@ -228,6 +238,18 @@
     font-size: var(--text-xl);
     font-weight: 700;
     line-height: var(--leading-snug);
+    color: var(--color-fg);
+  }
+
+  /* Product-title register. Same display face as `.display-hero`, but regular
+     weight and one size down: template names carry SEO keywords and run to a
+     full sentence, and a sentence set at 700 reads as a slab, not a title. */
+  .display-title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
     color: var(--color-fg);
   }
 
@@ -820,6 +842,27 @@
       max-width: var(--frame-phone-w-lg);
     }
 
+    /* Height-driven, unlike every other frame: `--stage-h` on `.gallery-xl`
+       below is the measure, and the ratio derives the width. `auto` + `none`
+       undo the width caps inherited from `.phone-frame`/`-lg`, and the auto
+       inline margin has to go too — in the flex row it would eat the free space
+       that separates the stage from its arrows. */
+    .phone-frame-xl {
+      height: var(--stage-h);
+      width: auto;
+      max-width: none;
+      margin-inline: 0;
+    }
+
+    /* Vertical thumbnail rail beside the stage, capped to the stage's height so
+       a long gallery scrolls inside the rail rather than running past the image
+       it belongs to. */
+    .phone-frame-rail {
+      width: var(--frame-rail-w);
+      max-height: var(--stage-h);
+      overflow-y: auto;
+    }
+
     /* Wraps a frame plus whatever sits under it (caption, thumbnail strip) so
        the whole stack shares the frame's width and centring. */
     .phone-frame-stack {
@@ -836,6 +879,72 @@
 
     .phone-frame-thumb {
       aspect-ratio: var(--frame-phone-ratio);
+    }
+  }
+
+  /* --- Detail-page gallery ----------------------------------------------
+     Handset: stage on top, thumbnails in a strip beneath it, arrows laid over
+     the image — the only place they fit at 375px. */
+  .gallery-xl {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    width: 100%;
+  }
+
+  .gallery-stage-row {
+    position: relative;
+  }
+
+  .gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+
+  .gallery-nav-prev {
+    left: var(--space-3);
+  }
+
+  .gallery-nav-next {
+    right: var(--space-3);
+  }
+
+  @media (min-width: 48rem) {
+    .gallery-xl {
+      /* Fixed, not viewport-relative: tying this to `100vh` sounded right but
+         a 720px-tall window drove the stage down to 270px wide — narrower than
+         the catalogue card, which is worse than a little scrolling. */
+      --stage-h: var(--frame-stage-h);
+
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--space-6);
+      /* Rail, both arrows, the stage, and the air between them. Capping the
+         group rather than letting it stretch is what keeps the arrows a fixed
+         distance from the image on a wide screen. */
+      max-width: calc(
+        var(--stage-h) * 9 / 16 + var(--frame-rail-w) + var(--frame-nav-w) * 2 +
+          var(--space-6) + var(--space-7) * 2
+      );
+      margin-inline: auto;
+    }
+
+    /* Arrows step out of the image and take a column each. `space-between`
+       spends the leftover width as breathing room on either side of the stage,
+       which is the airy part of the brief. */
+    .gallery-stage-row {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gallery-nav {
+      position: static;
+      transform: none;
     }
   }
 
@@ -870,6 +979,10 @@
 
     .display-section {
       font-size: var(--text-2xl);
+    }
+
+    .display-title {
+      font-size: var(--text-xl);
     }
   }
 

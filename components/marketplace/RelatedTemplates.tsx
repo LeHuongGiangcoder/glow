@@ -3,8 +3,12 @@ import { Button } from '@/components/ui/Button'
 import { TemplateCard } from '@/components/ui/TemplateCard'
 import type { Template } from '@/lib/templates'
 
-/** How many sibling templates sit next to the Bespoke card. */
-const RELATED_COUNT = 3
+/**
+ * How many siblings the rail offers. The row scrolls rather than wrapping, so
+ * this is no longer capped by what fits across one screen — more of the
+ * catalogue gets a chance in front of a buyer who has not decided yet.
+ */
+const RELATED_COUNT = 8
 
 /**
  * Templates closest to the one being viewed: most shared style tags first,
@@ -46,13 +50,21 @@ export function RelatedTemplates({
           </Link>
         </div>
 
-        <div className="mt-9 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
+        {/* A scrolling rail of smaller cards, not a grid: suggestions are a
+            browsing aid, so more of them at a glanceable size beats four at
+            catalogue size. `-mx` lets the row bleed to the viewport edge, which
+            is what signals there is more to the right. */}
+        <div className="-mx-[var(--space-5)] mt-9 flex snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--space-5)] pb-2 md:-mx-[var(--space-7)] md:px-[var(--space-7)]">
           {related.map((template) => (
-            <TemplateCard key={template.slug} template={template} />
+            <TemplateCard
+              key={template.slug}
+              template={template}
+              className="w-[168px] shrink-0 snap-start md:w-[188px]"
+            />
           ))}
 
-          {/* Last cell of the row hands the undecided visitor over to Bespoke. */}
-          <div className="flex flex-col justify-between rounded-md border border-line-strong p-6">
+          {/* End of the rail hands the undecided visitor over to Bespoke. */}
+          <div className="flex w-[240px] shrink-0 snap-start flex-col justify-between rounded-md border border-line-strong p-6">
             <div>
               <p className="eyebrow text-fg-muted">Thiết kế riêng</p>
               <p className="display-card mt-3">Không mẫu nào đúng ý?</p>

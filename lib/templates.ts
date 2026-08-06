@@ -25,14 +25,13 @@ export const TEMPLATE_PRICE_VND = 4_500_000
 export type Template = {
   slug: string
   name: string
-  mood: string
   styleTags: StyleTag[]
   priceVnd: number
   coverImageUrl?: string
   galleryUrls?: string[]
   /** Stand-in for coverImage until real screenshots land. */
   imageColor: string
-  /** PRD F2: "Còn nhận đơn hoả tốc" badge, toggled per template in Sanity. */
+  /** PRD F2: "Còn nhận đơn hoả tốc" — a bolt icon on the card, set in Sanity. */
   expressAvailable: boolean
   description: string
   sections: string[]
@@ -40,6 +39,14 @@ export type Template = {
   includes: string[]
   demoUrl?: string
 }
+
+/**
+ * Eyebrow above the title on the detail page. A per-template `mood` string used
+ * to sit here and told a buyer nothing they could act on; this states what every
+ * template actually ships with instead.
+ */
+export const TEMPLATE_DETAIL_EYEBROW =
+  'Website cưới · Song ngữ Việt – Anh · Tối ưu điện thoại'
 
 /** PRD F3: fixed copy shared by every template — not a per-template Sanity field. */
 export const TEMPLATE_ALWAYS_INCLUDED = [
@@ -59,7 +66,6 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     slug: 'willow',
     name: 'Willow',
-    mood: 'Lãng mạn · Tối giản',
     styleTags: ['Lãng mạn', 'Tối giản'],
     priceVnd: TEMPLATE_PRICE_VND,
     imageColor: 'var(--color-paper-100)',
@@ -77,7 +83,6 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     slug: 'marble',
     name: 'Marble',
-    mood: 'Hiện đại · Tạp chí',
     styleTags: ['Hiện đại'],
     priceVnd: TEMPLATE_PRICE_VND,
     imageColor: 'var(--color-warm-gray-100)',
@@ -95,7 +100,6 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     slug: 'linen',
     name: 'Linen',
-    mood: 'Tối giản · Nhẹ nhàng',
     styleTags: ['Tối giản'],
     priceVnd: TEMPLATE_PRICE_VND,
     imageColor: 'var(--color-warm-gray-300)',
@@ -113,7 +117,6 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     slug: 'amber',
     name: 'Amber',
-    mood: 'Cổ điển · Ấm',
     styleTags: ['Cổ điển'],
     priceVnd: TEMPLATE_PRICE_VND,
     imageColor: 'var(--color-ink-500)',
@@ -131,7 +134,6 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     slug: 'orchid',
     name: 'Orchid',
-    mood: 'Lãng mạn · Đậm',
     styleTags: ['Lãng mạn'],
     priceVnd: TEMPLATE_PRICE_VND,
     imageColor: 'var(--color-ink-700)',
@@ -149,7 +151,6 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     slug: 'stone',
     name: 'Stone',
-    mood: 'Hiện đại · Tĩnh',
     styleTags: ['Hiện đại', 'Tối giản'],
     priceVnd: TEMPLATE_PRICE_VND,
     imageColor: 'var(--color-ink-900)',

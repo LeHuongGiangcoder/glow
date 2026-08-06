@@ -6,7 +6,9 @@ import { Footer } from '@/components/ui/Footer'
 import { NavBar } from '@/components/ui/NavBar'
 import { RelatedTemplates } from '@/components/marketplace/RelatedTemplates'
 import { TemplateMediaGallery } from '@/components/marketplace/TemplateMediaGallery'
+import { TemplateSections } from '@/components/marketplace/TemplateSections'
 import {
+  TEMPLATE_DETAIL_EYEBROW,
   formatVnd,
   getTemplate,
   getTemplates,
@@ -56,15 +58,32 @@ export default async function TemplateDetailPage(
           </Link>
         </div>
 
-        <div className="container-max grid grid-cols-1 gap-10 py-12 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:gap-14">
-          <div className="w-full min-w-0">
+        {/* 60/40: media carries the sale, the buying column stays a readable
+            measure beside it. */}
+        {/* `grid-rows-[auto_1fr]` + `items-start` matter: the buying column
+            spans both rows, and without them the browser splits its height
+            across the two, which stretched the card and left a 440px hole under
+            the gallery. Row one now measures the gallery, row two absorbs the
+            rest. */}
+        <div className="container-max grid grid-cols-1 gap-10 py-12 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-14">
+          <div className="w-full min-w-0 lg:col-start-1 lg:row-start-1">
             <TemplateMediaGallery template={template} />
           </div>
 
-          <div className="min-w-0 lg:max-w-[62ch]">
-            <p className="eyebrow">{template.mood}</p>
-            <h1 className="display-hero mt-3">{template.name}</h1>
-            <p className="lede mt-5 max-w-[46ch]">{template.description}</p>
+          {/* Spans both rows so the reassurance card below can sit directly
+              under the gallery rather than under this column's full height. */}
+          <div className="min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2">
+            <p className="eyebrow">{TEMPLATE_DETAIL_EYEBROW}</p>
+            {/* Regular weight, not `.display-hero`: names here run long on
+                purpose to carry search keywords. */}
+            <h1 className="display-title mt-3">{template.name}</h1>
+
+            {/* Sections sit directly under the name: they are what a buyer is
+                actually comparing between templates, so they come before the
+                price rather than after the fold. */}
+            <div className="mt-6">
+              <TemplateSections sections={template.sections} />
+            </div>
 
             <p className="display-section mt-8">{formatVnd(template.priceVnd)}</p>
             <p className="font-body text-xs text-fg-muted">
@@ -109,19 +128,30 @@ export default async function TemplateDetailPage(
               </div>
             </dl>
 
-            {/* Sections */}
+            {/* Description last: it is the one block a buyer reads only after
+                the name, the sections and the price have already sold them. */}
             <div className="hairline-t mt-8 pt-7">
-              <p className="eyebrow text-fg-muted">Các section có sẵn</p>
-              <ul className="mt-3.5 flex list-none flex-wrap gap-2.5 p-0">
-                {template.sections.map((section) => (
-                  <li
-                    key={section}
-                    className="rounded-pill border border-line-strong px-3.5 py-[7px] font-body text-xs"
-                  >
-                    {section}
-                  </li>
-                ))}
-              </ul>
+              <p className="eyebrow text-fg-muted">Về mẫu này</p>
+              {/* `whitespace-pre-line` honours the newlines the editor typed in
+                  Sanity's text field — HTML collapses them by default, which ran
+                  every paragraph of a long description into one block. */}
+              <p className="lede mt-3.5 max-w-[46ch] whitespace-pre-line">
+                {template.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Under the gallery on a laptop, last on a handset — placed by grid
+              rather than by source order, so a marketing card never wedges
+              itself between the preview and the price on a phone. */}
+          <div className="min-w-0 lg:col-start-1 lg:row-start-2">
+            <div className="rounded-md border border-line-strong p-6">
+              <p className="display-card">
+                Bạn chọn template, Glow làm web cho bạn
+              </p>
+              <p className="lede mt-3">
+                Không cần tốn thời gian chỉnh sửa mày mò.
+              </p>
             </div>
           </div>
         </div>

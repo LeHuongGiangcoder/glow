@@ -1,5 +1,41 @@
 import { defineField, defineType } from 'sanity'
 
+/**
+ * The section vocabulary, offered as a checklist so section names stay spelled
+ * one way across the catalogue. Declared here rather than imported from
+ * `lib/templates`: that module pulls in the Sanity fetch client, which has no
+ * business inside the Studio bundle.
+ */
+const SECTION_OPTIONS = [
+  'Trang chủ',
+  'Câu chuyện',
+  'Gia đình',
+  'Dòng thời gian',
+  'Sự kiện',
+  'Thông tin lễ cưới',
+  'Album',
+  'Dresscode',
+  'Smart RSVP',
+  'Mừng cưới',
+  'E-visa',
+  'Travel guide',
+]
+
+/**
+ * Pre-filled on every new template so the editor unticks what a mẫu lacks
+ * instead of retyping the whole list.
+ */
+const DEFAULT_SECTIONS = [
+  'Trang chủ',
+  'Câu chuyện',
+  'Dòng thời gian',
+  'Sự kiện',
+  'Album',
+  'Smart RSVP',
+  'Dresscode',
+  'Mừng cưới',
+]
+
 export const templateType = defineType({
   name: 'template',
   title: 'Mẫu giao diện (Template)',
@@ -22,17 +58,12 @@ export const templateType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'mood',
-      title: 'Phục vụ tâm trạng / Phong cách',
-      type: 'string',
-      description: 'Ví dụ: Lãng mạn · Tối giản',
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
       name: 'styleTags',
-      title: 'Thẻ phong cách (Style Tags)',
+      title: 'Thẻ phong cách (chỉ dùng để lọc)',
       type: 'array',
       of: [{ type: 'string' }],
+      description:
+        'Không hiển thị trên card hay trang chi tiết. Chỉ dùng cho thanh lọc ở trang Mẫu có sẵn và để gợi ý mẫu tương tự.',
       options: {
         list: [
           'Tất cả',
@@ -103,6 +134,14 @@ export const templateType = defineType({
       title: 'Các section có sẵn',
       type: 'array',
       of: [{ type: 'string' }],
+      description:
+        'Đã tick sẵn các section mặc định — chỉ cần bỏ tick section mà mẫu này không có.',
+      // `initialValue` applies to new documents only; existing templates keep
+      // whatever they were saved with.
+      initialValue: DEFAULT_SECTIONS,
+      options: {
+        list: SECTION_OPTIONS,
+      },
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -121,7 +160,7 @@ export const templateType = defineType({
   preview: {
     select: {
       title: 'name',
-      subtitle: 'mood',
+      media: 'coverImage',
     },
   },
 })
