@@ -5,7 +5,7 @@ import Image from 'next/image'
  * above a sweeping progress bar.
  */
 export function GlowLoading({
-  message = 'Đang chuẩn bị bản xem trước…',
+  message = 'Muốn đẹp thì đợi Glow một tẹo…',
 }: {
   message?: string
 }) {
