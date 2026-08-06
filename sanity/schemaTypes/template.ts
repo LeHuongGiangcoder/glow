@@ -9,12 +9,10 @@ import { defineField, defineType } from 'sanity'
 const SECTION_OPTIONS = [
   'Trang chủ',
   'Câu chuyện',
-  'Gia đình',
-  'Dòng thời gian',
-  'Sự kiện',
   'Thông tin lễ cưới',
   'Album',
   'Dresscode',
+  'Nhạc tự chọn',
   'Smart RSVP',
   'Mừng cưới',
   'E-visa',
@@ -28,11 +26,10 @@ const SECTION_OPTIONS = [
 const DEFAULT_SECTIONS = [
   'Trang chủ',
   'Câu chuyện',
-  'Dòng thời gian',
-  'Sự kiện',
   'Album',
-  'Smart RSVP',
   'Dresscode',
+  'Nhạc tự chọn',
+  'Smart RSVP',
   'Mừng cưới',
 ]
 
