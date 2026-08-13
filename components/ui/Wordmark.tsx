@@ -1,11 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
+import { getI18n } from '@/lib/i18n/server'
 
 /**
  * The "Glow" brand logo image.
  */
-export function Wordmark({
+export async function Wordmark({
   className,
   href = '/',
   onInverse = false,
@@ -14,10 +15,12 @@ export function Wordmark({
   href?: string | null
   onInverse?: boolean
 }) {
+  const { t } = await getI18n()
+
   const content = (
     <Image
       src="/glow-logo.png"
-      alt="Glow Wedding Logo"
+      alt={t.wordmark.logoAlt}
       width={240}
       height={80}
       priority
@@ -34,7 +37,7 @@ export function Wordmark({
   return (
     <Link
       href={href}
-      aria-label="Glow — trang chủ"
+      aria-label={t.wordmark.homeLabel}
       className="inline-flex items-center"
     >
       {content}

@@ -1,7 +1,11 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
-import { formatVnd, type Template } from '@/lib/templates'
+import { useLocale, useT } from '@/lib/i18n/client'
+import { formatVnd } from '@/lib/i18n/format'
+import { type Template } from '@/lib/templates'
 
 /**
  * Minimal stroke icon, 2px, no fill — the system's only icon convention.
@@ -39,6 +43,9 @@ export function TemplateCard({
   template: Template
   className?: string
 }) {
+  const t = useT()
+  const locale = useLocale()
+
   return (
     <Link
       href={`/templates/${template.slug}`}
@@ -66,10 +73,10 @@ export function TemplateCard({
           <span
             // Translucent paper tint is the system's only use of transparency.
             className="absolute left-3.5 top-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-pill bg-paper-050/82 text-fg"
-            title="Còn nhận hoả tốc (1–3 ngày)"
+            title={t.templates.card.expressTitle}
           >
             <BoltIcon />
-            <span className="sr-only">Còn nhận hoả tốc</span>
+            <span className="sr-only">{t.templates.card.express}</span>
           </span>
         )}
       </div>
@@ -82,7 +89,7 @@ export function TemplateCard({
           {template.name}
         </p>
         <p className="mt-1.5 font-body text-sm text-fg">
-          {formatVnd(template.priceVnd)}
+          {formatVnd(template.priceVnd, locale)}
         </p>
       </div>
     </Link>

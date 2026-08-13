@@ -2,16 +2,19 @@ import Link from 'next/link'
 import { Button } from './Button'
 import { LanguageToggle } from './LanguageToggle'
 import { Wordmark } from './Wordmark'
-
-const links = [
-  { href: '/templates', label: 'Mẫu có sẵn' },
-  { href: '/bespoke', label: 'Bespoke' },
-  { href: '/features/guest-list', label: 'Quản lý khách mời' },
-  { href: '/faq', label: 'Câu hỏi' },
-]
+import { getI18n } from '@/lib/i18n/server'
 
 /** Opaque, not sticky-blurred — the system uses no glass/blur in navigation. */
-export function NavBar() {
+export async function NavBar() {
+  const { t } = await getI18n()
+
+  const links = [
+    { href: '/templates', label: t.nav.templates },
+    { href: '/bespoke', label: t.nav.bespoke },
+    { href: '/features/guest-list', label: t.nav.guestList },
+    { href: '/faq', label: t.nav.faq },
+  ]
+
   return (
     <header className="hairline-b bg-page">
       <nav className="container-max flex items-center justify-between gap-4 py-3.5 md:py-[11px] lg:gap-6 lg:py-[10px]">
@@ -37,7 +40,7 @@ export function NavBar() {
             size="sm"
             className="md:px-3.5 md:py-[6px] md:text-[13px]"
           >
-            Bắt đầu
+            {t.nav.start}
           </Button>
         </div>
       </nav>

@@ -13,6 +13,8 @@ import {
 } from '@/components/booking/DetailsStep'
 import { DateTimeStep } from '@/components/booking/DateTimeStep'
 import { Button } from '@/components/ui/Button'
+import { useLocale, useT } from '@/lib/i18n/client'
+import { interpolate } from '@/lib/i18n/format'
 import {
   formatDateLong,
   formatSlotCompact,
@@ -35,6 +37,8 @@ export function BookingFlow({
   exitHref: string
 }) {
   const router = useRouter()
+  const t = useT()
+  const locale = useLocale()
   const [step, setStep] = useState<1 | 2>(1)
   // Only the template route promises a finished site for a fixed price, so only
   // it owes the buyer the call-and-payment expectation up front. Bespoke has its
@@ -47,15 +51,22 @@ export function BookingFlow({
   const [pending, setPending] = useState(false)
 
   const railRows = [
-    { label: 'Thời lượng', value: `${MEETING.durationMin} phút` },
-    { label: 'Hình thức', value: MEETING.platform },
-    { label: 'Múi giờ', value: MEETING.timezoneLabel },
-    ...(templateName ? [{ label: 'Mẫu đã chọn', value: templateName }] : []),
+    {
+      label: t.booking.rail.duration,
+      value: interpolate(t.booking.durationValue, {
+        minutes: MEETING.durationMin,
+      }),
+    },
+    { label: t.booking.rail.platform, value: MEETING.platform },
+    { label: t.booking.rail.timezone, value: MEETING.timezoneLabel },
+    ...(templateName
+      ? [{ label: t.booking.rail.template, value: templateName }]
+      : []),
     ...(date
       ? [
           {
-            label: 'Đã chọn',
-            value: formatSlotCompact(date, time),
+            label: t.booking.rail.selected,
+            value: formatSlotCompact(t, date, time),
             // Both steps already show the chosen slot in their own header.
             inSummary: false,
           },
@@ -64,7 +75,7 @@ export function BookingFlow({
   ]
 
   async function handleSubmit() {
-    const found = validateDetails(details)
+    const found = validateDetails(details, t)
     setErrors(found)
     if (Object.keys(found).length > 0 || !date || !time) return
 
@@ -77,15 +88,16 @@ export function BookingFlow({
         body: JSON.stringify({
           type,
           templateSlug: templateSlug ?? '',
-          templateName:
-            templateName ?? (type === 'bespoke' ? 'Bespoke' : 'Mẫu có sẵn'),
+          templateName: templateName ?? (type === 'bespoke' ? 'Bespoke' : ''),
           date,
           time,
+          // The language the couple booked in, so Glow replies in it.
+          locale,
           ...details,
         }),
       })
     } catch (e) {
-      console.error('Lỗi khi gửi form booking:', e)
+      console.error('Booking submission failed:', e)
     } finally {
       setPending(false)
       const params = new URLSearchParams({ type, date, time })
@@ -104,7 +116,7 @@ export function BookingFlow({
       <BookingShell current={step} exitHref={exitHref}>
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr]">
           <BookingRail rows={railRows}>
-            <p className="lede mt-5 text-sm">{MEETING.description}</p>
+            <p className="lede mt-5 text-sm">{t.booking.meetingDescription}</p>
           </BookingRail>
 
           <div>
@@ -123,8 +135,8 @@ export function BookingFlow({
                 <div className="hairline-t flex flex-wrap items-center justify-between gap-4 px-6 py-6 md:px-10">
                   <p className="field-hint">
                     {date && time
-                      ? `${formatDateLong(date)}, ${formatTimeRange(time)}`
-                      : 'Chọn ngày và giờ để đi tiếp.'}
+                      ? `${formatDateLong(t, date)}, ${formatTimeRange(time)}`
+                      : t.booking.calendar.continueHint}
                   </p>
                   <Button
                     type="button"
@@ -133,7 +145,7 @@ export function BookingFlow({
                     disabled={!date || !time}
                     onClick={() => setStep(2)}
                   >
-                    Tiếp tục
+                    {t.booking.calendar.continue}
                   </Button>
                 </div>
               </>

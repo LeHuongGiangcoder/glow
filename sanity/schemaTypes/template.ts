@@ -99,8 +99,8 @@ export const templateType = defineType({
           fields: [
             {
               name: 'alt',
-              type: 'string',
-              title: 'Mô tả ảnh (Alt Text)',
+              type: 'localeString',
+              title: 'Mô tả ảnh (Alt Text) — song ngữ',
             },
           ],
         },
@@ -122,8 +122,10 @@ export const templateType = defineType({
     }),
     defineField({
       name: 'description',
-      title: 'Mô tả mẫu',
-      type: 'text',
+      title: 'Mô tả mẫu (song ngữ)',
+      type: 'localeText',
+      description:
+        'Điền cả hai ngôn ngữ. Thiếu một bên thì site tự dùng bên còn lại.',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -143,9 +145,10 @@ export const templateType = defineType({
     }),
     defineField({
       name: 'includes',
-      title: 'Quyền lợi / Nội dung bao gồm',
-      type: 'array',
-      of: [{ type: 'string' }],
+      title: 'Quyền lợi / Nội dung bao gồm (song ngữ)',
+      type: 'localeStringArray',
+      description:
+        'Điền cả hai ngôn ngữ. Thiếu một bên thì site tự dùng bên còn lại.',
       validation: (rule) => rule.required(),
     }),
     defineField({

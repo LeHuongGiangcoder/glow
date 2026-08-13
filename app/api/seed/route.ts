@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { writeClient } from '@/sanity/lib/client'
-import { MOCK_TEMPLATES } from '@/lib/templates'
+import { MOCK_TEMPLATES } from '@/lib/seed-data'
 
 export async function GET() {
   try {
@@ -26,9 +26,10 @@ export async function GET() {
         priceVnd: item.priceVnd,
         imageColor: item.imageColor,
         expressAvailable: item.expressAvailable,
-        description: item.description,
+        // Bilingual objects, matching `localeText` / `localeStringArray`.
+        description: { _type: 'localeText', ...item.description },
         sections: item.sections,
-        includes: item.includes,
+        includes: { _type: 'localeStringArray', ...item.includes },
         demoUrl: item.demoUrl,
       }
 

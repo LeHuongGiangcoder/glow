@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
     if (!scriptUrl) {
       return NextResponse.json(
-        { error: 'Chưa cấu hình GOOGLE_SCRIPT_BOOKING_URL' },
+        { error: 'GOOGLE_SCRIPT_BOOKING_URL is not configured' },
         { status: 500 },
       )
     }
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     const data = await res.json()
     return NextResponse.json(data)
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Lỗi kết nối server'
+    const message = err instanceof Error ? err.message : 'Server connection failed'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

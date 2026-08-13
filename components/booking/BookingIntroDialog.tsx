@@ -2,15 +2,18 @@
 
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
+import { useT } from '@/lib/i18n/client'
 
 /**
- * Shown once, over the calendar, to anyone arriving from a template's "Chọn mẫu
- * này". It sets the expectation the booking flow itself never states: the call
- * is where content is agreed and payment happens, and express costs more. The
- * calendar renders behind it, so dismissing it is a continuation rather than a
- * page change.
+ * Shown once, over the calendar, to anyone arriving from a template's "Choose
+ * this template". It sets the expectation the booking flow itself never states:
+ * the call is where content is agreed and payment happens, and express costs
+ * more. The calendar renders behind it, so dismissing it is a continuation
+ * rather than a page change.
  */
 export function BookingIntroDialog({ onDismiss }: { onDismiss: () => void }) {
+  const t = useT()
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onDismiss()
@@ -40,25 +43,19 @@ export function BookingIntroDialog({ onDismiss }: { onDismiss: () => void }) {
         className="w-full max-w-[520px] rounded-md border border-line-strong bg-card p-7 md:p-10"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="eyebrow text-fg-muted">Bước tiếp theo</p>
+        <p className="eyebrow text-fg-muted">{t.booking.intro.eyebrow}</p>
         <h2 id="booking-intro-title" className="display-section mt-3">
-          Cảm ơn bạn đã tin tưởng Glow
+          {t.booking.intro.title}
         </h2>
 
-        <p className="lede mt-4">
-          Để website đến tay bạn, hãy xếp một buổi call 15 phút với Glow để chốt
-          các nội dung trong website và thanh toán nhé.
-        </p>
+        <p className="lede mt-4">{t.booking.intro.body}</p>
 
         <ul className="point-list hairline-t mt-6 pt-6">
-          <li>
-            <span className="key">Trung bình 7–10 ngày</span> — website hoàn
-            thiện sau buổi call
-          </li>
-          <li>
-            <span className="key">Hoả tốc 1–3 ngày</span> — Glow tính thêm 20%
-            chi phí
-          </li>
+          {t.booking.intro.points.map(([keyword, rest]) => (
+            <li key={keyword}>
+              <span className="key">{keyword}</span> — {rest}
+            </li>
+          ))}
         </ul>
 
         <div className="mt-8">
@@ -69,7 +66,7 @@ export function BookingIntroDialog({ onDismiss }: { onDismiss: () => void }) {
             autoFocus
             onClick={onDismiss}
           >
-            Chọn lịch call
+            {t.booking.intro.cta}
           </Button>
         </div>
       </div>

@@ -30,17 +30,25 @@ export function FilterChip({
   )
 }
 
+/**
+ * An option is either a bare string — value and label in one — or a
+ * `{ value, label }` pair, for the case where the stored value is a key and the
+ * label is translated. `label` (the group's accessible name) has no default:
+ * it is copy, so the caller passes it from the dictionary.
+ */
+export type FilterOption<T extends string> = T | { value: T; label: string }
+
 export function FilterBar<T extends string>({
   options,
   value,
   onChange,
-  label = 'Lọc theo phong cách',
+  label,
   className,
 }: {
-  options: readonly T[]
+  options: readonly FilterOption<T>[]
   value: T
   onChange?: (value: T) => void
-  label?: string
+  label: string
   className?: string
 }) {
   return (
@@ -49,14 +57,18 @@ export function FilterBar<T extends string>({
       aria-label={label}
       className={cn('flex flex-wrap gap-2.5', className)}
     >
-      {options.map((opt) => (
-        <FilterChip
-          key={opt}
-          label={opt}
-          active={opt === value}
-          onClick={() => onChange?.(opt)}
-        />
-      ))}
+      {options.map((opt) => {
+        const optValue = typeof opt === 'string' ? opt : opt.value
+        const optLabel = typeof opt === 'string' ? opt : opt.label
+        return (
+          <FilterChip
+            key={optValue}
+            label={optLabel}
+            active={optValue === value}
+            onClick={() => onChange?.(optValue)}
+          />
+        )
+      })}
     </div>
   )
 }

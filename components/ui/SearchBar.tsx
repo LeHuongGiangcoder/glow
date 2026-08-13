@@ -23,15 +23,16 @@ function SearchIcon() {
   )
 }
 
+/** `placeholder` and `label` are copy — the caller passes them from the dictionary. */
 export function SearchBar({
-  placeholder = 'Tìm mẫu, phong cách, tông màu…',
-  label = 'Tìm mẫu website cưới',
+  placeholder,
+  label,
   value,
   onChange,
   className,
 }: {
-  placeholder?: string
-  label?: string
+  placeholder: string
+  label: string
   value?: string
   onChange?: (value: string) => void
   className?: string

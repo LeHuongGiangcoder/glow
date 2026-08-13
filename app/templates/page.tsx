@@ -3,16 +3,21 @@ import { Button } from '@/components/ui/Button'
 import { Footer } from '@/components/ui/Footer'
 import { NavBar } from '@/components/ui/NavBar'
 import { TemplateGallery } from '@/components/marketplace/TemplateGallery'
+import { getI18n } from '@/lib/i18n/server'
 import { getTemplates } from '@/lib/templates'
 
-export const metadata: Metadata = {
-  title: 'Mẫu website cưới có sẵn',
-  description:
-    'Bộ sưu tập mẫu website cưới của Glow. Giá công khai, có demo thật, bàn giao 7–10 ngày hoặc hoả tốc 1–3 ngày.',
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n()
+  return {
+    title: t.meta.templates.title,
+    description: t.meta.templates.description,
+  }
 }
 
 export default async function TemplatesPage() {
-  const templates = await getTemplates()
+  const { locale, t } = await getI18n()
+  const templates = await getTemplates(locale)
+
   return (
     <>
       <NavBar />
@@ -21,14 +26,10 @@ export default async function TemplatesPage() {
         <section className="container-max section-y">
           <div className="section-head">
             <div>
-              <p className="eyebrow">Bộ sưu tập</p>
-              <h1 className="display-hero mt-4">Mẫu có sẵn</h1>
+              <p className="eyebrow">{t.templates.eyebrow}</p>
+              <h1 className="display-hero mt-4">{t.templates.title}</h1>
             </div>
-            <p className="lede">
-              Cùng một mức giá cho mọi mẫu trong giai đoạn này. Mỗi mẫu đổi được
-              nội dung và màu sắc theo bảng màu có sẵn, và đều có bản demo mở
-              được ngay.
-            </p>
+            <p className="lede">{t.templates.lede}</p>
           </div>
 
           <div className="mt-12">
@@ -37,13 +38,11 @@ export default async function TemplatesPage() {
 
           <div className="mt-16 flex flex-wrap items-center justify-between gap-6 rounded-md bg-sunken px-8 py-10 md:px-12">
             <div className="max-w-[42ch]">
-              <h2 className="display-card">Không thấy mẫu hợp gu?</h2>
-              <p className="lede mt-2">
-                Bespoke thiết kế từ đầu theo câu chuyện riêng của bạn.
-              </p>
+              <h2 className="display-card">{t.templates.bannerTitle}</h2>
+              <p className="lede mt-2">{t.templates.bannerBody}</p>
             </div>
             <Button href="/bespoke" variant="secondary" size="md">
-              Xem Bespoke
+              {t.common.viewBespoke}
             </Button>
           </div>
         </section>

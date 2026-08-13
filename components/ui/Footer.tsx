@@ -1,4 +1,5 @@
 import { Wordmark } from './Wordmark'
+import { getI18n } from '@/lib/i18n/server'
 
 /** Minimal stroke icons, 2px, no fill — following the system's icon convention. */
 function InstagramIcon() {
@@ -103,7 +104,9 @@ const social = [
   },
 ]
 
-export function Footer() {
+export async function Footer() {
+  const { t } = await getI18n()
+
   return (
     <footer className="hairline-t">
       <div className="container-max flex flex-wrap items-center justify-between gap-6 py-12">
@@ -125,7 +128,7 @@ export function Footer() {
             )
           })}
         </div>
-        <p className="font-body text-xs text-fg-muted">© 2026 Glow Studio, Việt Nam</p>
+        <p className="font-body text-xs text-fg-muted">{t.footer.copyright}</p>
       </div>
     </footer>
   )

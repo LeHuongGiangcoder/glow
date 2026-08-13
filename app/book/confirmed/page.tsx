@@ -9,11 +9,16 @@ import {
   formatTimeRange,
   MEETING,
 } from '@/lib/booking'
+import { interpolate } from '@/lib/i18n/format'
+import { getI18n } from '@/lib/i18n/server'
 import { getTemplate } from '@/lib/templates'
 
-export const metadata: Metadata = {
-  title: 'Đã đặt lịch',
-  robots: { index: false },
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n()
+  return {
+    title: t.meta.booked.title,
+    robots: { index: false },
+  }
 }
 
 /** Minimal stroke checkmark — 2px, rounded caps, no fill. */
@@ -39,30 +44,45 @@ export default async function BookingConfirmedPage(
   props: PageProps<'/book/confirmed'>,
 ) {
   const params = await props.searchParams
+  const { locale, t } = await getI18n()
   const type = params.type === 'bespoke' ? 'bespoke' : 'template'
   const slug = typeof params.template === 'string' ? params.template : undefined
-  const template = slug ? await getTemplate(slug) : undefined
+  const template = slug ? await getTemplate(slug, locale) : undefined
 
   // The slot the flow just booked. PRD F8 will echo these back from the Apps
   // Script response instead of trusting the query string.
   const date = typeof params.date === 'string' ? params.date : undefined
   const time = typeof params.time === 'string' ? params.time : undefined
   const meetingTime =
-    date && time ? `${formatDateLong(date)}, ${formatTimeRange(time)}` : undefined
+    date && time ? `${formatDateLong(t, date)}, ${formatTimeRange(time)}` : undefined
 
   const railRows = [
-    { label: 'Thời lượng', value: `${MEETING.durationMin} phút` },
-    { label: 'Hình thức', value: MEETING.platform },
-    { label: 'Múi giờ', value: MEETING.timezoneLabel },
     {
-      label: type === 'bespoke' ? 'Nội dung' : 'Mẫu đã chọn',
-      value: type === 'bespoke' ? 'Tư vấn Bespoke' : (template?.name ?? 'Mẫu có sẵn'),
+      label: t.booking.rail.duration,
+      value: interpolate(t.booking.durationValue, {
+        minutes: MEETING.durationMin,
+      }),
+    },
+    { label: t.booking.rail.platform, value: MEETING.platform },
+    { label: t.booking.rail.timezone, value: MEETING.timezoneLabel },
+    {
+      label: type === 'bespoke' ? t.booking.rail.topic : t.booking.rail.template,
+      value:
+        type === 'bespoke'
+          ? t.booking.confirmed.bespokeTopic
+          : (template?.name ?? t.booking.confirmed.fallbackTemplate),
     },
     {
-      label: 'Đã chọn',
-      value: date && time ? formatSlotCompact(date, time) : 'Glow sẽ xác nhận qua email',
+      label: t.booking.rail.selected,
+      value:
+        date && time
+          ? formatSlotCompact(t, date, time)
+          : t.booking.confirmed.pendingSlot,
     },
-    { label: 'Thanh toán', value: 'Chưa cần' },
+    {
+      label: t.booking.rail.payment,
+      value: t.booking.confirmed.noPaymentYet,
+    },
   ]
 
   return (
@@ -73,7 +93,7 @@ export default async function BookingConfirmedPage(
         <BookingShell current={3}>
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr]">
           <BookingRail rows={railRows}>
-            <p className="lede mt-5 text-sm">{MEETING.description}</p>
+            <p className="lede mt-5 text-sm">{t.booking.meetingDescription}</p>
           </BookingRail>
 
           <div className="flex items-center justify-center px-6 py-16 md:px-10">
@@ -83,26 +103,25 @@ export default async function BookingConfirmedPage(
               </div>
 
               <h1 className="display-section mt-7 text-balance">
-                Đã giữ chỗ cho buổi trò chuyện.
+                {t.booking.confirmed.title}
               </h1>
 
               {meetingTime && <p className="eyebrow mt-5">{meetingTime}</p>}
 
               <p className="lede mx-auto mt-4 max-w-[44ch]">
-                Glow đã nhận yêu cầu của bạn. Chúng tôi sẽ gửi email xác nhận kèm
-                link Google Meet, và liên hệ lại trong vòng 12 giờ.
+                {t.booking.confirmed.body}
               </p>
 
               {/* PRD F8: the bespoke branch surfaces the Proposal one last time. */}
               {type === 'bespoke' && (
                 <p className="field-hint mt-6">
-                  Bạn có thể xem lại bản Proposal trước buổi meeting.
+                  {t.booking.confirmed.bespokeNote}
                 </p>
               )}
 
               <div className="mt-9">
                 <Button href="/" variant="primary" size="lg">
-                  Về trang chủ
+                  {t.common.backToHome}
                 </Button>
               </div>
             </div>

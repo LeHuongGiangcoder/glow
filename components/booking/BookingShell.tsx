@@ -1,14 +1,18 @@
+'use client'
+
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
-
-export const BOOKING_STEPS = ['Ngày & giờ', 'Thông tin', 'Xác nhận'] as const
+import { useT } from '@/lib/i18n/client'
 
 /**
  * The frame shared by all three booking steps: numbered stepper, an escape
  * hatch, and a hairline-ruled panel. Steps 1–2 live in `BookingFlow`; step 3 is
- * the server-rendered confirmation page, which reuses this so the chrome does
- * not jump when the flow completes.
+ * the confirmation page, which reuses this so the chrome does not jump when the
+ * flow completes.
+ *
+ * A client component because `BookingFlow` is one and imports it — which also
+ * means it reads its copy from the provider rather than from the server.
  */
 export function BookingShell({
   current,
@@ -20,13 +24,15 @@ export function BookingShell({
   exitHref?: string
   children: ReactNode
 }) {
+  const t = useT()
+
   return (
     <main className="flex-1 bg-sunken py-0 md:py-12">
       <div className="container-max">
         <div className="hairline-t hairline-b border-x border-line bg-card">
           <div className="hairline-b flex items-center justify-between gap-6 px-6 py-5 md:px-10">
             <ol className="flex list-none items-center gap-x-7 p-0">
-              {BOOKING_STEPS.map((label, index) => {
+              {t.booking.steps.map((label, index) => {
                 const step = index + 1
                 const active = step === current
                 return (
@@ -37,7 +43,7 @@ export function BookingShell({
                       'eyebrow flex items-center gap-2.5 transition-opacity duration-base ease-standard',
                       active ? 'text-fg' : 'text-fg-muted',
                       // Narrow screens carry only the step you are on; the full
-                      // ladder needs more width than Vietnamese labels allow.
+                      // ladder needs more width than the labels allow.
                       !active && 'hidden md:flex',
                     )}
                   >
@@ -54,7 +60,7 @@ export function BookingShell({
               href={exitHref}
               className="eyebrow text-fg-muted no-underline transition-opacity duration-fast ease-standard hover:opacity-60"
             >
-              Đóng
+              {t.common.close}
             </Link>
           </div>
 
@@ -80,11 +86,13 @@ export function BookingRail({
   rows: { label: string; value: ReactNode; inSummary?: boolean }[]
   children?: ReactNode
 }) {
+  const t = useT()
+
   return (
     <aside className="hairline-b flex flex-col gap-6 px-6 py-8 md:px-10 lg:h-full lg:gap-10 lg:border-b-0 lg:border-r lg:border-line">
       <div>
-        <p className="eyebrow text-fg-muted">Glow Wedding</p>
-        <p className="display-hero mt-2">Intro</p>
+        <p className="eyebrow text-fg-muted">{t.meta.siteName}</p>
+        <p className="display-hero mt-2">{t.booking.railTitle}</p>
         {children}
       </div>
 

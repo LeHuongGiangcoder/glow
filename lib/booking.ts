@@ -1,5 +1,5 @@
 /**
- * Booking flow: meeting definition, question options, and date helpers.
+ * Booking flow: meeting definition and date helpers.
  *
  * PLACEHOLDER AVAILABILITY — PRD F8 replaces `slotsFor` with the Apps Script /
  * Google Calendar free-busy response. The shape here (a list of "HH:mm" strings
@@ -10,17 +10,23 @@
  * server in one timezone and a browser in another always agree on which square
  * of the calendar is "today". The only place a real timezone appears is
  * `todayIso`, which asks explicitly for the Vietnam day.
+ *
+ * Everything a reader sees — weekday names, month names, the meeting blurb, the
+ * question options — lives in the dictionaries. The formatters below take the
+ * dictionary as their first argument rather than reaching for it themselves, so
+ * this module stays importable from both a server page and a client component.
  */
 
+import type { Dictionary } from '@/lib/i18n/dictionaries/en'
+
 export const MEETING = {
-  /** Shown as the title of the left rail. */
-  name: 'Intro',
-  description: 'Buổi trò chuyện ngắn với hai người sẽ trực tiếp làm website cho bạn.',
-  /** First meeting is deliberately short — 15 phút. */
+  /** Display name comes from the dictionary; this is the stable key. */
+  id: 'intro',
+  /** First meeting is deliberately short. */
   durationMin: 15,
   platform: 'Google Meet',
   timezoneLabel: 'Asia / Ho Chi Minh',
-  /** IANA zone used to resolve "hôm nay" consistently. */
+  /** IANA zone used to resolve "today" consistently. */
   timezone: 'Asia/Ho_Chi_Minh',
 } as const
 
@@ -28,51 +34,23 @@ export const MEETING = {
 const OPEN_WEEKDAYS = [2, 3, 4, 5, 6]
 
 /**
- * Placeholder slot grid. Meetings are 15 phút but are offered on the half hour
- * so there is a buffer between calls.
+ * Placeholder slot grid. Meetings are 15 minutes but are offered on the half
+ * hour so there is a buffer between calls.
  */
 const MORNING = ['09:30', '10:00', '10:30', '11:00', '11:30']
 const AFTERNOON = ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30']
 
-/** "Khi nào cần website ready" — coarse ranges, not an exact date. */
-export const READY_WHEN_OPTIONS = [
-  'Trong 1–2 tuần (cần hoả tốc)',
-  'Trong vòng 1 tháng',
-  '1–3 tháng nữa',
-  'Hơn 3 tháng nữa',
-  'Chưa chắc chắn',
-] as const
-
 /**
- * "Sao bạn biết đến Glow". Picking Wedding Planner reveals a follow-up asking
- * which planner, so referrals can be credited back.
+ * The stable value stored for "Wedding Planner", which reveals the follow-up
+ * asking which planner. Compared against the option `value`, never the label,
+ * so the follow-up still appears in Vietnamese.
  */
-export const REFERRAL_OPTIONS = [
-  'Google',
-  'Facebook',
-  'Instagram',
-  'Wedding Planner',
-  'Khác',
-] as const
-
-export const REFERRAL_PLANNER = 'Wedding Planner'
-
-export type ReadyWhen = (typeof READY_WHEN_OPTIONS)[number]
-export type ReferralSource = (typeof REFERRAL_OPTIONS)[number]
-
-const VI_WEEKDAYS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'] as const
-const VI_WEEKDAYS_LONG = [
-  'Thứ Hai',
-  'Thứ Ba',
-  'Thứ Tư',
-  'Thứ Năm',
-  'Thứ Sáu',
-  'Thứ Bảy',
-  'Chủ Nhật',
-] as const
+export const REFERRAL_PLANNER = 'wedding-planner'
 
 /** Monday-first, matching how Vietnamese calendars are printed. */
-export const WEEKDAY_HEADINGS = VI_WEEKDAYS
+export function weekdayHeadings(t: Dictionary) {
+  return t.booking.dates.weekdaysShort
+}
 
 function pad(n: number) {
   return String(n).padStart(2, '0')
@@ -140,27 +118,37 @@ export function monthGrid({ year, month }: MonthCursor): (string | null)[] {
   return [...lead, ...days]
 }
 
-export function monthLabel({ year, month }: MonthCursor) {
-  return `Tháng ${month + 1} ${year}`
+/** "August 2026" / "Tháng 8 2026" */
+export function monthLabel(t: Dictionary, { year, month }: MonthCursor) {
+  return `${t.booking.dates.months[month]} ${year}`
 }
 
-/** "Thứ Tư, 12 tháng 8 2026" */
-export function formatDateLong(iso: string) {
+/** "Wednesday, 12 August 2026" / "Thứ Tư, 12 tháng 8 2026" */
+export function formatDateLong(t: Dictionary, iso: string) {
   const [year, month, day] = iso.split('-').map(Number)
-  return `${VI_WEEKDAYS_LONG[mondayIndex(iso)]}, ${day} tháng ${month} ${year}`
+  const weekday = t.booking.dates.weekdaysLong[mondayIndex(iso)]
+  return `${weekday}, ${day} ${monthWord(t, month)} ${year}`
 }
 
-/** "12 tháng 8, 11:00" — the rail is narrow, so it gets the short form. */
-export function formatSlotCompact(iso: string, time?: string | null) {
+/** "12 August, 11:00" — the rail is narrow, so it gets the short form. */
+export function formatSlotCompact(t: Dictionary, iso: string, time?: string | null) {
   const [, month, day] = iso.split('-').map(Number)
-  const date = `${day} tháng ${month}`
+  const date = `${day} ${monthWord(t, month)}`
   return time ? `${date}, ${time}` : date
 }
 
-/** "T4 12" — the compact form used above the slot column. */
-export function formatDateShort(iso: string) {
+/** "Wed 12" / "T4 12" — the compact form used above the slot column. */
+export function formatDateShort(t: Dictionary, iso: string) {
   const [, , day] = iso.split('-').map(Number)
-  return `${VI_WEEKDAYS[mondayIndex(iso)]} ${day}`
+  return `${t.booking.dates.weekdaysShort[mondayIndex(iso)]} ${day}`
+}
+
+/**
+ * The month inside a date. Vietnamese labels are already "Tháng 8", which reads
+ * correctly mid-sentence; English ones are the bare month name.
+ */
+function monthWord(t: Dictionary, month: number) {
+  return t.booking.dates.monthsInline[month - 1]
 }
 
 /** "11:00 — 11:15" from a start time and the meeting length. */

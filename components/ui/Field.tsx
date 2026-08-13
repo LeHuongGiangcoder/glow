@@ -3,6 +3,7 @@
 import type { ComponentProps, ReactNode } from 'react'
 import { useId } from 'react'
 import { cn } from '@/lib/cn'
+import { useT } from '@/lib/i18n/client'
 
 /**
  * Ruled-line form fields. The visual rules live in `globals.css`
@@ -27,11 +28,17 @@ function FieldFrame({
   className?: string
   children: ReactNode
 }) {
+  const optionalLabel = useT().common.optional
+
   return (
     <div className={cn('w-full', className)}>
       <label htmlFor={id} className="field-label">
         {label}
-        {optional && <span className="ml-2 normal-case tracking-normal">không bắt buộc</span>}
+        {optional && (
+          <span className="ml-2 normal-case tracking-normal">
+            {optionalLabel}
+          </span>
+        )}
       </label>
       {children}
       {error ? (
@@ -113,6 +120,13 @@ export function TextAreaField({
   )
 }
 
+/**
+ * A select option is either a bare string — value and label in one — or a
+ * `{ value, label }` pair, for the case where the submitted value is a stable
+ * key and only the label is translated.
+ */
+export type SelectOption = string | { value: string; label: string }
+
 /** Minimal stroke chevron, matching SearchBar's icon convention. */
 function ChevronIcon() {
   return (
@@ -144,7 +158,7 @@ export function SelectField({
   placeholder,
   ...rest
 }: FieldProps & {
-  options: readonly string[]
+  options: readonly SelectOption[]
   placeholder?: string
   className?: string
 } & Omit<ComponentProps<'select'>, 'className' | 'children'>) {
@@ -176,11 +190,16 @@ export function SelectField({
               {placeholder}
             </option>
           )}
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
+          {options.map((option) => {
+            const value = typeof option === 'string' ? option : option.value
+            const optionLabel =
+              typeof option === 'string' ? option : option.label
+            return (
+              <option key={value} value={value}>
+                {optionLabel}
+              </option>
+            )
+          })}
         </select>
         <ChevronIcon />
       </div>

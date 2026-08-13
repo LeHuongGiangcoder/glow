@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { cn } from '@/lib/cn'
+import { useT } from '@/lib/i18n/client'
+import { interpolate } from '@/lib/i18n/format'
 import {
   formatDateShort,
   formatTimeRange,
@@ -13,7 +15,7 @@ import {
   shiftMonth,
   slotsFor,
   toIso,
-  WEEKDAY_HEADINGS,
+  weekdayHeadings,
   type MonthCursor,
 } from '@/lib/booking'
 
@@ -77,6 +79,7 @@ export function DateTimeStep({
   onSelectDate: (iso: string) => void
   onSelectTime: (time: string) => void
 }) {
+  const t = useT()
   const [cursor, setCursor] = useState<MonthCursor>(() => monthOf(date ?? today))
 
   const cells = monthGrid(cursor)
@@ -89,22 +92,24 @@ export function DateTimeStep({
   const atFirstMonth =
     toIso(cursor.year, cursor.month, 1) <= toIso(monthOf(today).year, monthOf(today).month, 1)
 
+  const currentMonth = monthLabel(t, cursor)
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px]">
       {/* Calendar */}
       <div className="hairline-b px-6 py-8 md:px-10 lg:border-b-0 lg:border-r lg:border-line">
         <div className="flex items-center justify-between gap-4">
-          <p className="display-card">{monthLabel(cursor)}</p>
+          <p className="display-card">{currentMonth}</p>
           <div className="flex items-center gap-1">
             <MonthNavButton
               direction="prev"
-              label="Tháng trước"
+              label={t.booking.calendar.prevMonth}
               disabled={atFirstMonth}
               onClick={() => setCursor(shiftMonth(cursor, -1))}
             />
             <MonthNavButton
               direction="next"
-              label="Tháng sau"
+              label={t.booking.calendar.nextMonth}
               onClick={() => setCursor(shiftMonth(cursor, 1))}
             />
           </div>
@@ -112,13 +117,15 @@ export function DateTimeStep({
 
         <div
           role="grid"
-          aria-label={`Chọn ngày trong ${monthLabel(cursor)}`}
+          aria-label={interpolate(t.booking.calendar.gridLabel, {
+            month: currentMonth,
+          })}
           // Capped so the day cells stay a comfortable square instead of
           // stretching into tall blocks on wide screens.
           className="mt-7 max-w-[520px]"
         >
           <div role="row" className="grid grid-cols-7 gap-1.5">
-            {WEEKDAY_HEADINGS.map((day) => (
+            {weekdayHeadings(t).map((day) => (
               <div
                 key={day}
                 role="columnheader"
@@ -163,16 +170,14 @@ export function DateTimeStep({
           ))}
         </div>
 
-        <p className="field-hint mt-7 italic">
-          Buổi Intro diễn ra từ thứ Ba đến thứ Bảy.
-        </p>
+        <p className="field-hint mt-7 italic">{t.booking.calendar.openDays}</p>
       </div>
 
       {/* Slots */}
       <div className="px-6 py-8 md:px-10 lg:px-6">
         {date ? (
           <>
-            <p className="eyebrow">{formatDateShort(date)}</p>
+            <p className="eyebrow">{formatDateShort(t, date)}</p>
             <ul className="mt-5 flex list-none flex-col gap-2.5 p-0">
               {slots.map((slot) => {
                 const selected = slot === time
@@ -200,8 +205,9 @@ export function DateTimeStep({
           </>
         ) : (
           <p className="field-hint">
-            Chọn một ngày để xem khung giờ còn trống. Mỗi buổi kéo dài{' '}
-            {MEETING.durationMin} phút.
+            {interpolate(t.booking.calendar.pickDay, {
+              minutes: MEETING.durationMin,
+            })}
           </p>
         )}
       </div>

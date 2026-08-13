@@ -7,27 +7,27 @@ import { NavBar } from '@/components/ui/NavBar'
 import { RelatedTemplates } from '@/components/marketplace/RelatedTemplates'
 import { TemplateMediaGallery } from '@/components/marketplace/TemplateMediaGallery'
 import { TemplateSections } from '@/components/marketplace/TemplateSections'
-import {
-  TEMPLATE_DETAIL_EYEBROW,
-  formatVnd,
-  getTemplate,
-  getTemplates,
-} from '@/lib/templates'
+import { formatVnd, interpolate } from '@/lib/i18n/format'
+import { getI18n } from '@/lib/i18n/server'
+import { getTemplate, getTemplates } from '@/lib/templates'
 
-export async function generateStaticParams() {
-  const templates = await getTemplates()
-  return templates.map((template) => ({ slug: template.slug }))
-}
+/**
+ * `generateStaticParams` is gone: the locale comes from a cookie, so every page
+ * renders per-request anyway and prerendering the slugs would only produce a
+ * shell that has to be thrown away. Move to `/[lang]` routing if these pages
+ * ever need to be static again.
+ */
 
 export async function generateMetadata(
   props: PageProps<'/templates/[slug]'>,
 ): Promise<Metadata> {
   const { slug } = await props.params
-  const template = await getTemplate(slug)
+  const { locale, t } = await getI18n()
+  const template = await getTemplate(slug, locale)
   if (!template) return {}
 
   return {
-    title: `Mẫu ${template.name}`,
+    title: interpolate(t.meta.templateDetail.title, { name: template.name }),
     description: template.description,
   }
 }
@@ -36,13 +36,15 @@ export default async function TemplateDetailPage(
   props: PageProps<'/templates/[slug]'>,
 ) {
   const { slug } = await props.params
+  const { locale, t } = await getI18n()
   const [template, templates] = await Promise.all([
-    getTemplate(slug),
-    getTemplates(),
+    getTemplate(slug, locale),
+    getTemplates(locale),
   ])
   if (!template) notFound()
 
   const bookHref = `/book?type=template&template=${template.slug}`
+  const price = formatVnd(template.priceVnd, locale)
 
   return (
     <>
@@ -54,7 +56,7 @@ export default async function TemplateDetailPage(
             href="/templates"
             className="font-body text-sm text-fg-muted no-underline transition-opacity duration-fast ease-standard hover:opacity-60"
           >
-            ← Quay lại bộ sưu tập
+            {t.templateDetail.back}
           </Link>
         </div>
 
@@ -73,7 +75,7 @@ export default async function TemplateDetailPage(
           {/* Spans both rows so the reassurance card below can sit directly
               under the gallery rather than under this column's full height. */}
           <div className="min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2">
-            <p className="eyebrow">{TEMPLATE_DETAIL_EYEBROW}</p>
+            <p className="eyebrow">{t.templateDetail.eyebrow}</p>
             {/* Regular weight, not `.display-hero`: names here run long on
                 purpose to carry search keywords. */}
             <h1 className="display-title mt-3">{template.name}</h1>
@@ -85,14 +87,14 @@ export default async function TemplateDetailPage(
               <TemplateSections sections={template.sections} />
             </div>
 
-            <p className="display-section mt-8">{formatVnd(template.priceVnd)}</p>
+            <p className="display-section mt-8">{price}</p>
             <p className="font-body text-xs text-fg-muted">
-              Đã bao gồm VAT. Không cần thanh toán trước khi đặt lịch.
+              {t.templateDetail.vatNote}
             </p>
 
             <div className="mt-7 hidden flex-wrap gap-3.5 lg:flex">
               <Button href={bookHref} variant="primary" size="lg">
-                Chọn mẫu này
+                {t.templateDetail.choose}
               </Button>
               {template.demoUrl ? (
                 <a
@@ -101,37 +103,45 @@ export default async function TemplateDetailPage(
                   rel="noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-pill border border-ink-900 px-[34px] py-4 font-body text-base tracking-wide text-ink-900 no-underline transition-colors duration-fast ease-standard hover:bg-ink-900 hover:text-fg-inverse"
                 >
-                  Xem demo thật
+                  {t.templateDetail.demo}
                 </a>
               ) : null}
             </div>
 
             <p className="lede mt-5 hidden text-xs lg:block">
-              Cần riêng biệt hơn?{' '}
+              {t.templateDetail.moreDistinct}{' '}
               <Link href="/bespoke" className="text-fg underline underline-offset-4">
-                Xem Bespoke
+                {t.common.viewBespoke}
               </Link>
             </p>
 
             {/* Delivery */}
             <dl className="hairline-t mt-10 grid grid-cols-2 gap-6 pt-7">
               <div>
-                <dt className="eyebrow text-fg-muted">Thời gian bàn giao</dt>
+                <dt className="eyebrow text-fg-muted">
+                  {t.templateDetail.deliveryLabel}
+                </dt>
                 <dd className="mt-2 font-body text-sm">
-                  Trung bình 7–10 ngày
-                  {template.expressAvailable && ', hoả tốc 1–3 ngày'}
+                  {t.templateDetail.deliveryValue}
+                  {template.expressAvailable && t.templateDetail.deliveryExpress}
                 </dd>
               </div>
               <div>
-                <dt className="eyebrow text-fg-muted">Số vòng sửa</dt>
-                <dd className="mt-2 font-body text-sm">Không giới hạn</dd>
+                <dt className="eyebrow text-fg-muted">
+                  {t.templateDetail.revisionsLabel}
+                </dt>
+                <dd className="mt-2 font-body text-sm">
+                  {t.templateDetail.revisionsValue}
+                </dd>
               </div>
             </dl>
 
             {/* Description last: it is the one block a buyer reads only after
                 the name, the sections and the price have already sold them. */}
             <div className="hairline-t mt-8 pt-7">
-              <p className="eyebrow text-fg-muted">Về mẫu này</p>
+              <p className="eyebrow text-fg-muted">
+                {t.templateDetail.aboutTitle}
+              </p>
               {/* `whitespace-pre-line` honours the newlines the editor typed in
                   Sanity's text field — HTML collapses them by default, which ran
                   every paragraph of a long description into one block. */}
@@ -147,11 +157,9 @@ export default async function TemplateDetailPage(
           <div className="min-w-0 lg:col-start-1 lg:row-start-2">
             <div className="rounded-md border border-line-strong p-6">
               <p className="display-card">
-                Bạn chọn template, Glow làm web cho bạn
+                {t.templateDetail.reassuranceTitle}
               </p>
-              <p className="lede mt-3">
-                Không cần tốn thời gian chỉnh sửa mày mò.
-              </p>
+              <p className="lede mt-3">{t.templateDetail.reassuranceBody}</p>
             </div>
           </div>
         </div>
@@ -163,16 +171,16 @@ export default async function TemplateDetailPage(
       <div className="hairline-t fixed inset-x-0 bottom-0 z-10 bg-page px-6 py-4 lg:hidden">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="font-body text-sm">{formatVnd(template.priceVnd)}</p>
+            <p className="font-body text-sm">{price}</p>
             <Link
               href="/bespoke"
               className="font-body text-xs text-fg-muted no-underline underline-offset-4 hover:underline"
             >
-              Cần riêng biệt hơn? Xem Bespoke
+              {t.templateDetail.moreDistinctShort}
             </Link>
           </div>
           <Button href={bookHref} variant="primary" size="md">
-            Chọn mẫu này
+            {t.templateDetail.choose}
           </Button>
         </div>
       </div>

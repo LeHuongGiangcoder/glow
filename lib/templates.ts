@@ -1,10 +1,21 @@
 /**
  * Template catalogue management via Sanity CMS.
+ *
+ * Every fetch takes a locale, which the GROQ projection uses to flatten the
+ * bilingual CMS fields into plain strings — see `sanity/lib/queries.ts`.
  */
 
 import { client } from '@/sanity/lib/client'
 import { templateBySlugQuery, templatesQuery } from '@/sanity/lib/queries'
+import type { Locale } from '@/lib/i18n/config'
+import type { Dictionary } from '@/lib/i18n/dictionaries/en'
 
+/**
+ * The stored style vocabulary. These strings are keys, not display copy: the
+ * filter compares them and `pickRelated` counts overlaps between them, so they
+ * stay Vietnamese in Sanity in both locales. `styleTagLabel` turns one into
+ * something a reader sees.
+ */
 export const STYLE_TAGS = [
   'Tất cả',
   'Tối giản',
@@ -14,6 +25,19 @@ export const STYLE_TAGS = [
 ] as const
 
 export type StyleTag = (typeof STYLE_TAGS)[number]
+
+/** The "no filter" member of STYLE_TAGS. */
+export const ALL_STYLES: StyleTag = 'Tất cả'
+
+/** Display label for a stored style tag; unknown tags show as stored. */
+export function styleTagLabel(t: Dictionary, tag: string) {
+  return t.vocab.styleTags[tag] ?? tag
+}
+
+/** Display label for a stored section name; unknown sections show as stored. */
+export function sectionLabel(t: Dictionary, section: string) {
+  return t.vocab.sections[section] ?? section
+}
 
 /**
  * PRD F9: one price for every template during the testing phase, but the field
@@ -29,147 +53,23 @@ export type Template = {
   priceVnd: number
   coverImageUrl?: string
   galleryUrls?: string[]
+  /** Parallel to `galleryUrls`; entries may be null where no alt was written. */
+  galleryAlts?: (string | null)[]
   /** Stand-in for coverImage until real screenshots land. */
   imageColor: string
-  /** PRD F2: "Còn nhận đơn hoả tốc" — a bolt icon on the card, set in Sanity. */
+  /** PRD F2: express availability — a bolt icon on the card, set in Sanity. */
   expressAvailable: boolean
+  /** Already resolved to the requested locale by the GROQ projection. */
   description: string
   sections: string[]
-  /** PRD F3: per-template inclusions. The fixed two live in TEMPLATE_ALWAYS_INCLUDED. */
+  /** PRD F3: per-template inclusions, resolved to the requested locale. */
   includes: string[]
   demoUrl?: string
 }
 
-/**
- * Eyebrow above the title on the detail page. A per-template `mood` string used
- * to sit here and told a buyer nothing they could act on; this states what every
- * template actually ships with instead.
- */
-export const TEMPLATE_DETAIL_EYEBROW =
-  'Website cưới · Song ngữ Việt – Anh · Tối ưu điện thoại'
-
-/** PRD F3: fixed copy shared by every template — not a per-template Sanity field. */
-export const TEMPLATE_ALWAYS_INCLUDED = [
-  'Đổi thông tin cá nhân: tên cô dâu chú rể, ngày giờ, địa điểm, toàn bộ nội dung chữ',
-  'Đổi màu theo bảng màu có sẵn của mẫu',
-] as const
-
-/** PRD F3: identical across templates. */
-export const TEMPLATE_NOT_INCLUDED = [
-  'Chụp ảnh cưới',
-  'Viết nội dung thay bạn',
-  'Đổi cấu trúc các section',
-  'Thiết kế lại từ đầu',
-] as const
-
-export const MOCK_TEMPLATES: Template[] = [
-  {
-    slug: 'willow',
-    name: 'Willow',
-    styleTags: ['Lãng mạn', 'Tối giản'],
-    priceVnd: TEMPLATE_PRICE_VND,
-    imageColor: 'var(--color-paper-100)',
-    expressAvailable: true,
-    description:
-      'Bố cục yên tĩnh, nhiều khoảng thở, dành cho cặp đôi muốn câu chuyện của mình được kể chậm rãi. Song ngữ, tối ưu cho điện thoại.',
-    sections: ['Trang chủ', 'Câu chuyện', 'Dòng thời gian', 'RSVP', 'Album', 'Mừng cưới'],
-    includes: [
-      'Tối đa 40 ảnh',
-      'Subdomain glow.vn miễn phí, hosting 12 tháng',
-      'Guest List + Smart RSVP',
-    ],
-    demoUrl: 'https://demo.glow.vn/willow',
-  },
-  {
-    slug: 'marble',
-    name: 'Marble',
-    styleTags: ['Hiện đại'],
-    priceVnd: TEMPLATE_PRICE_VND,
-    imageColor: 'var(--color-warm-gray-100)',
-    expressAvailable: true,
-    description:
-      'Kiểu dàn trang tạp chí, chữ lớn và ảnh tràn viền. Hợp với bộ ảnh cưới mạnh về bố cục.',
-    sections: ['Trang chủ', 'Câu chuyện', 'Sự kiện', 'RSVP', 'Album'],
-    includes: [
-      'Tối đa 60 ảnh',
-      'Subdomain glow.vn miễn phí, hosting 12 tháng',
-      'Guest List + Smart RSVP',
-    ],
-    demoUrl: 'https://demo.glow.vn/marble',
-  },
-  {
-    slug: 'linen',
-    name: 'Linen',
-    styleTags: ['Tối giản'],
-    priceVnd: TEMPLATE_PRICE_VND,
-    imageColor: 'var(--color-warm-gray-300)',
-    expressAvailable: false,
-    description:
-      'Ít chi tiết nhất trong bộ sưu tập. Chữ, khoảng trắng và một vài bức ảnh — không gì khác.',
-    sections: ['Trang chủ', 'Thông tin lễ cưới', 'RSVP', 'Album'],
-    includes: [
-      'Tối đa 25 ảnh',
-      'Subdomain glow.vn miễn phí, hosting 12 tháng',
-      'Guest List + Smart RSVP',
-    ],
-    demoUrl: 'https://demo.glow.vn/linen',
-  },
-  {
-    slug: 'amber',
-    name: 'Amber',
-    styleTags: ['Cổ điển'],
-    priceVnd: TEMPLATE_PRICE_VND,
-    imageColor: 'var(--color-ink-500)',
-    expressAvailable: true,
-    description:
-      'Cảm giác thiệp giấy cũ: chữ serif đậm, viền mảnh, tông ấm. Dành cho tiệc cưới truyền thống.',
-    sections: ['Trang chủ', 'Câu chuyện', 'Gia đình', 'Dòng thời gian', 'RSVP', 'Album'],
-    includes: [
-      'Tối đa 40 ảnh',
-      'Subdomain glow.vn miễn phí, hosting 12 tháng',
-      'Guest List + Smart RSVP',
-    ],
-    demoUrl: 'https://demo.glow.vn/amber',
-  },
-  {
-    slug: 'orchid',
-    name: 'Orchid',
-    styleTags: ['Lãng mạn'],
-    priceVnd: TEMPLATE_PRICE_VND,
-    imageColor: 'var(--color-ink-700)',
-    expressAvailable: false,
-    description:
-      'Nền tối, chữ sáng, ảnh làm nhân vật chính. Hợp với tiệc cưới buổi tối.',
-    sections: ['Trang chủ', 'Câu chuyện', 'Sự kiện', 'RSVP', 'Album', 'Mừng cưới'],
-    includes: [
-      'Tối đa 50 ảnh',
-      'Subdomain glow.vn miễn phí, hosting 12 tháng',
-      'Guest List + Smart RSVP',
-    ],
-    demoUrl: 'https://demo.glow.vn/orchid',
-  },
-  {
-    slug: 'stone',
-    name: 'Stone',
-    styleTags: ['Hiện đại', 'Tối giản'],
-    priceVnd: TEMPLATE_PRICE_VND,
-    imageColor: 'var(--color-ink-900)',
-    expressAvailable: true,
-    description:
-      'Đen trắng tuyệt đối, không hoa văn. Bố cục lưới chặt chẽ, đọc rất nhanh trên điện thoại.',
-    sections: ['Trang chủ', 'Thông tin lễ cưới', 'Dòng thời gian', 'RSVP', 'Album'],
-    includes: [
-      'Tối đa 30 ảnh',
-      'Subdomain glow.vn miễn phí, hosting 12 tháng',
-      'Guest List + Smart RSVP',
-    ],
-    demoUrl: 'https://demo.glow.vn/stone',
-  },
-]
-
-export async function getTemplates(): Promise<Template[]> {
+export async function getTemplates(locale: Locale): Promise<Template[]> {
   try {
-    const data = await client.fetch(templatesQuery)
+    const data = await client.fetch(templatesQuery, { locale })
     return data || []
   } catch (error) {
     console.error('Failed to fetch templates from Sanity:', error)
@@ -177,17 +77,15 @@ export async function getTemplates(): Promise<Template[]> {
   }
 }
 
-export async function getTemplate(slug: string): Promise<Template | undefined> {
+export async function getTemplate(
+  slug: string,
+  locale: Locale,
+): Promise<Template | undefined> {
   try {
-    const data = await client.fetch(templateBySlugQuery, { slug })
+    const data = await client.fetch(templateBySlugQuery, { slug, locale })
     return data || undefined
   } catch (error) {
     console.error(`Failed to fetch template ${slug} from Sanity:`, error)
     return undefined
   }
-}
-
-/** PRD F9: state clearly whether VAT is included. */
-export function formatVnd(amount: number) {
-  return `${amount.toLocaleString('vi-VN')} ₫`
 }

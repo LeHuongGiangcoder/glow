@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { TemplateCard } from '@/components/ui/TemplateCard'
+import { getI18n } from '@/lib/i18n/server'
 import type { Template } from '@/lib/templates'
 
 /**
@@ -28,25 +29,26 @@ export function pickRelated(current: Template, all: Template[]) {
     .map((entry) => entry.template)
 }
 
-export function RelatedTemplates({
+export async function RelatedTemplates({
   current,
   templates,
 }: {
   current: Template
   templates: Template[]
 }) {
+  const { t } = await getI18n()
   const related = pickRelated(current, templates)
 
   return (
     <section className="hairline-t">
       <div className="container-max section-y">
         <div className="flex flex-wrap items-baseline justify-between gap-4">
-          <h2 className="display-section">Có thể bạn cũng thích</h2>
+          <h2 className="display-section">{t.templateDetail.related.title}</h2>
           <Link
             href="/templates"
             className="font-body text-sm text-fg-muted no-underline transition-opacity duration-fast ease-standard hover:opacity-60"
           >
-            Xem tất cả mẫu →
+            {t.templateDetail.related.all}
           </Link>
         </div>
 
@@ -66,16 +68,19 @@ export function RelatedTemplates({
           {/* End of the rail hands the undecided visitor over to Bespoke. */}
           <div className="flex w-[240px] shrink-0 snap-start flex-col justify-between rounded-md border border-line-strong p-6">
             <div>
-              <p className="eyebrow text-fg-muted">Thiết kế riêng</p>
-              <p className="display-card mt-3">Không mẫu nào đúng ý?</p>
+              <p className="eyebrow text-fg-muted">
+                {t.templateDetail.related.eyebrow}
+              </p>
+              <p className="display-card mt-3">
+                {t.templateDetail.related.title2}
+              </p>
               <p className="lede mt-3 text-xs">
-                Glow Bespoke dựng website cưới từ đầu theo câu chuyện và bảng màu
-                của riêng hai bạn.
+                {t.templateDetail.related.body}
               </p>
             </div>
             <div className="mt-7">
               <Button href="/bespoke" variant="secondary" size="md">
-                Xem Bespoke
+                {t.common.viewBespoke}
               </Button>
             </div>
           </div>
