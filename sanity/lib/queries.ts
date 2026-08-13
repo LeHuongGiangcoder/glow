@@ -33,6 +33,7 @@ const templateProjection = `
   name,
   styleTags,
   priceVnd,
+  priceMyr,
   "coverImageUrl": coverImage.asset->url,
   "galleryUrls": gallery[].asset->url,
   imageColor,

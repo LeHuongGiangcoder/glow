@@ -3,8 +3,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
+import { useCurrency } from '@/lib/currency/client'
 import { useLocale, useT } from '@/lib/i18n/client'
-import { formatVnd } from '@/lib/i18n/format'
+import { formatPrice } from '@/lib/i18n/format'
 import { type Template } from '@/lib/templates'
 
 /**
@@ -45,6 +46,7 @@ export function TemplateCard({
 }) {
   const t = useT()
   const locale = useLocale()
+  const currency = useCurrency()
 
   return (
     <Link
@@ -89,7 +91,11 @@ export function TemplateCard({
           {template.name}
         </p>
         <p className="mt-1.5 font-body text-sm text-fg">
-          {formatVnd(template.priceVnd, locale)}
+          {formatPrice(
+            { vnd: template.priceVnd, myr: template.priceMyr },
+            currency,
+            locale,
+          )}
         </p>
       </div>
     </Link>

@@ -7,7 +7,8 @@ import { NavBar } from '@/components/ui/NavBar'
 import { RelatedTemplates } from '@/components/marketplace/RelatedTemplates'
 import { TemplateMediaGallery } from '@/components/marketplace/TemplateMediaGallery'
 import { TemplateSections } from '@/components/marketplace/TemplateSections'
-import { formatVnd, interpolate } from '@/lib/i18n/format'
+import { getCurrency } from '@/lib/currency/server'
+import { formatPrice, interpolate } from '@/lib/i18n/format'
 import { getI18n } from '@/lib/i18n/server'
 import { getTemplate, getTemplates } from '@/lib/templates'
 
@@ -37,6 +38,7 @@ export default async function TemplateDetailPage(
 ) {
   const { slug } = await props.params
   const { locale, t } = await getI18n()
+  const currency = await getCurrency()
   const [template, templates] = await Promise.all([
     getTemplate(slug, locale),
     getTemplates(locale),
@@ -44,7 +46,11 @@ export default async function TemplateDetailPage(
   if (!template) notFound()
 
   const bookHref = `/book?type=template&template=${template.slug}`
-  const price = formatVnd(template.priceVnd, locale)
+  const price = formatPrice(
+    { vnd: template.priceVnd, myr: template.priceMyr },
+    currency,
+    locale,
+  )
 
   return (
     <>

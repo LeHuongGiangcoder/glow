@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { fontVariables } from './fonts'
+import { CurrencyProvider } from '@/lib/currency/client'
+import { getCurrency } from '@/lib/currency/server'
 import { I18nProvider } from '@/lib/i18n/client'
 import { LOCALE_TAG, OG_LOCALE } from '@/lib/i18n/config'
 import { getI18n } from '@/lib/i18n/server'
@@ -56,12 +58,15 @@ export default async function RootLayout({
   // English is the default; the cookie the language toggle writes is the only
   // thing that changes it.
   const { locale, t } = await getI18n()
+  // Independent of locale: arriving via /malaysia sets ringgit, and flipping
+  // the language toggle afterwards must not move the price back to đồng.
+  const currency = await getCurrency()
 
   return (
     <html lang={LOCALE_TAG[locale]} className={`${fontVariables} h-full`}>
       <body className="flex min-h-full flex-col">
         <I18nProvider locale={locale} dictionary={t}>
-          {children}
+          <CurrencyProvider currency={currency}>{children}</CurrencyProvider>
         </I18nProvider>
         <Analytics />
       </body>

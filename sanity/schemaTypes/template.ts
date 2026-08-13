@@ -80,6 +80,15 @@ export const templateType = defineType({
       validation: (rule) => rule.required().positive(),
     }),
     defineField({
+      name: 'priceMyr',
+      title: 'Giá tiền (RM — thị trường Malaysia)',
+      type: 'number',
+      description:
+        'Giá bán tại Malaysia, nhập trực tiếp bằng Ringgit — KHÔNG quy đổi từ VNĐ. ' +
+        'Chỉ hiển thị cho khách vào từ link /malaysia. Bỏ trống thì mẫu này vẫn hiện giá VNĐ.',
+      validation: (rule) => rule.positive(),
+    }),
+    defineField({
       name: 'coverImage',
       title: 'Ảnh bìa (Cover Image - Display chính)',
       type: 'image',

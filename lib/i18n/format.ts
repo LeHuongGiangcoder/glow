@@ -4,6 +4,7 @@
  * same way and hydration does not disagree.
  */
 
+import type { Currency } from '../currency/config'
 import type { Locale } from './config'
 
 /**
@@ -29,4 +30,31 @@ export function interpolate(
  */
 export function formatVnd(amount: number, locale: Locale = 'en') {
   return `${amount.toLocaleString(locale === 'vi' ? 'vi-VN' : 'en-US')} ₫`
+}
+
+/** Ringgit is always grouped the Latin way, whichever language is showing. */
+export function formatMyr(amount: number) {
+  return `RM ${amount.toLocaleString('en-MY')}`
+}
+
+/**
+ * Render a template's price in the requested currency.
+ *
+ * Ringgit is a price the user typed into Sanity, not a conversion of the đồng
+ * figure — a foreign market is priced against its own market, and burying a
+ * multiplier in code would make the number impossible to audit later.
+ *
+ * Falls back to đồng whenever a template has no ringgit price, so a document
+ * that has not been priced for Malaysia yet shows a real number instead of an
+ * empty or invented one.
+ */
+export function formatPrice(
+  price: { vnd: number; myr?: number },
+  currency: Currency,
+  locale: Locale = 'en',
+) {
+  if (currency === 'MYR' && typeof price.myr === 'number') {
+    return formatMyr(price.myr)
+  }
+  return formatVnd(price.vnd, locale)
 }

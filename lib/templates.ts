@@ -51,6 +51,8 @@ export type Template = {
   name: string
   styleTags: StyleTag[]
   priceVnd: number
+  /** Malaysia test: authored in ringgit in Sanity, absent until it is priced. */
+  priceMyr?: number
   coverImageUrl?: string
   galleryUrls?: string[]
   /** Parallel to `galleryUrls`; entries may be null where no alt was written. */
