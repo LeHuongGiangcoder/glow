@@ -3,21 +3,18 @@ import { notFound } from 'next/navigation'
 import { TemplateDetail } from '@/components/marketplace/TemplateDetail'
 import { interpolate } from '@/lib/i18n/format'
 import { getI18n } from '@/lib/i18n/server'
-import { VN_MARKET } from '@/lib/market/config'
+import { MarketProvider } from '@/lib/market/client'
+import { MY_MARKET } from '@/lib/market/config'
 import { getTemplate, getTemplates } from '@/lib/templates'
 
 /**
- * `generateStaticParams` is gone: the locale comes from a cookie, so every page
- * renders per-request anyway and prerendering the slugs would only produce a
- * shell that has to be thrown away. Move to `/[lang]` routing if these pages
- * ever need to be static again.
- *
- * The screen itself lives in `TemplateDetail`, shared with `/malaysia/[slug]`.
- * All this route contributes is the market: Vietnam, priced in đồng.
+ * The Malaysian half of the template detail screen. Same slugs, same component
+ * as `/templates/[slug]` — the only difference is the market, which quotes the
+ * price in ringgit and keeps every link on the page inside `/malaysia`.
  */
 
 export async function generateMetadata(
-  props: PageProps<'/templates/[slug]'>,
+  props: PageProps<'/malaysia/[slug]'>,
 ): Promise<Metadata> {
   const { slug } = await props.params
   const { locale, t } = await getI18n()
@@ -30,8 +27,8 @@ export async function generateMetadata(
   }
 }
 
-export default async function TemplateDetailPage(
-  props: PageProps<'/templates/[slug]'>,
+export default async function MalaysiaTemplateDetailPage(
+  props: PageProps<'/malaysia/[slug]'>,
 ) {
   const { slug } = await props.params
   const { locale } = await getI18n()
@@ -42,10 +39,12 @@ export default async function TemplateDetailPage(
   if (!template) notFound()
 
   return (
-    <TemplateDetail
-      template={template}
-      templates={templates}
-      market={VN_MARKET}
-    />
+    <MarketProvider market={MY_MARKET}>
+      <TemplateDetail
+        template={template}
+        templates={templates}
+        market={MY_MARKET}
+      />
+    </MarketProvider>
   )
 }

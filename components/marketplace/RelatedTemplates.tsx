@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { TemplateCard } from '@/components/ui/TemplateCard'
 import { getI18n } from '@/lib/i18n/server'
+import type { Market } from '@/lib/market/config'
 import type { Template } from '@/lib/templates'
 
 /**
@@ -32,9 +33,13 @@ export function pickRelated(current: Template, all: Template[]) {
 export async function RelatedTemplates({
   current,
   templates,
+  market,
 }: {
   current: Template
   templates: Template[]
+  /** The cards read the market from context; only this explicit "see all"
+      link has to be told where its own catalogue lives. */
+  market: Market
 }) {
   const { t } = await getI18n()
   const related = pickRelated(current, templates)
@@ -45,7 +50,7 @@ export async function RelatedTemplates({
         <div className="flex flex-wrap items-baseline justify-between gap-4">
           <h2 className="display-section">{t.templateDetail.related.title}</h2>
           <Link
-            href="/templates"
+            href={market.catalogPath}
             className="font-body text-sm text-fg-muted no-underline transition-opacity duration-fast ease-standard hover:opacity-60"
           >
             {t.templateDetail.related.all}

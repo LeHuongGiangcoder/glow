@@ -3,9 +3,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
-import { useCurrency } from '@/lib/currency/client'
 import { useLocale, useT } from '@/lib/i18n/client'
 import { formatPrice } from '@/lib/i18n/format'
+import { useMarket } from '@/lib/market/client'
 import { type Template } from '@/lib/templates'
 
 /**
@@ -46,11 +46,14 @@ export function TemplateCard({
 }) {
   const t = useT()
   const locale = useLocale()
-  const currency = useCurrency()
+  // Both the price and the destination come from the market: a card on
+  // /malaysia quotes ringgit and links to /malaysia/<slug>, so a visitor is
+  // never handed a đồng price one click after seeing an RM one.
+  const market = useMarket()
 
   return (
     <Link
-      href={`/templates/${template.slug}`}
+      href={`${market.catalogPath}/${template.slug}`}
       className={cn(
         'phone-frame-stack group block rounded-md bg-card',
         'transition-transform duration-base ease-out',
@@ -93,7 +96,7 @@ export function TemplateCard({
         <p className="mt-1.5 font-body text-sm text-fg">
           {formatPrice(
             { vnd: template.priceVnd, myr: template.priceMyr },
-            currency,
+            market.currency,
             locale,
           )}
         </p>

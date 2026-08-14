@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { fontVariables } from './fonts'
-import { CurrencyProvider } from '@/lib/currency/client'
-import { getCurrency } from '@/lib/currency/server'
 import { I18nProvider } from '@/lib/i18n/client'
+import { MarketProvider } from '@/lib/market/client'
+import { VN_MARKET } from '@/lib/market/config'
 import { LOCALE_TAG, OG_LOCALE } from '@/lib/i18n/config'
 import { getI18n } from '@/lib/i18n/server'
 import './globals.css'
@@ -58,15 +58,15 @@ export default async function RootLayout({
   // English is the default; the cookie the language toggle writes is the only
   // thing that changes it.
   const { locale, t } = await getI18n()
-  // Independent of locale: arriving via /malaysia sets ringgit, and flipping
-  // the language toggle afterwards must not move the price back to đồng.
-  const currency = await getCurrency()
 
   return (
     <html lang={LOCALE_TAG[locale]} className={`${fontVariables} h-full`}>
       <body className="flex min-h-full flex-col">
         <I18nProvider locale={locale} dictionary={t}>
-          <CurrencyProvider currency={currency}>{children}</CurrencyProvider>
+          {/* Vietnam by default. The /malaysia routes nest their own provider,
+              which is the only way a page ever shows ringgit — so no amount of
+              clicking around can carry RM back onto the home page. */}
+          <MarketProvider market={VN_MARKET}>{children}</MarketProvider>
         </I18nProvider>
         <Analytics />
       </body>

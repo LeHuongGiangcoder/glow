@@ -3,13 +3,21 @@ import { Button } from './Button'
 import { LanguageToggle } from './LanguageToggle'
 import { Wordmark } from './Wordmark'
 import { getI18n } from '@/lib/i18n/server'
+import { VN_MARKET, type Market } from '@/lib/market/config'
 
 /** Opaque, not sticky-blurred — the system uses no glass/blur in navigation. */
-export async function NavBar() {
+export async function NavBar({
+  /** Which catalogue "Templates" and "Get started" point at. Defaults to
+      Vietnam, so every existing page keeps its old links untouched; the
+      /malaysia routes pass their own and keep the visitor in ringgit. */
+  market = VN_MARKET,
+}: {
+  market?: Market
+} = {}) {
   const { t } = await getI18n()
 
   const links = [
-    { href: '/templates', label: t.nav.templates },
+    { href: market.catalogPath, label: t.nav.templates },
     { href: '/bespoke', label: t.nav.bespoke },
     { href: '/features/guest-list', label: t.nav.guestList },
     { href: '/faq', label: t.nav.faq },
@@ -35,7 +43,7 @@ export async function NavBar() {
         <div className="flex items-center gap-3 lg:gap-3.5">
           <LanguageToggle />
           <Button
-            href="/templates"
+            href={market.catalogPath}
             variant="primary"
             size="sm"
             className="md:px-3.5 md:py-[6px] md:text-[13px]"

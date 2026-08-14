@@ -32,6 +32,11 @@ export const en = {
       /** `{name}` is the template's name. */
       title: '{name} template',
     },
+    malaysia: {
+      title: 'Wedding website templates for Malaysia',
+      description:
+        'Glow’s wedding website collection, priced in ringgit for couples marrying in Malaysia. Public pricing, real demos, delivered in 7–10 days or 1–3 days on express.',
+    },
     book: {
       title: 'Book a call',
       description:
@@ -418,6 +423,31 @@ export const en = {
       expressTitle: 'Express orders available (1–3 days)',
       express: 'Express available',
     },
+  },
+
+  /** The Malaysia landing page. Prices on this route are quoted in ringgit. */
+  malaysia: {
+    eyebrow: 'Malaysia',
+    title: 'Wedding websites, priced for Malaysia',
+    lede: 'The same collection Glow builds for couples in Vietnam, quoted in ringgit. Every template is built for you — you choose the design, we put your story in it — and each one has a demo you can open right now.',
+    /** Sits under the hero, three short reassurances in a row. */
+    points: [
+      {
+        label: 'Priced in ringgit',
+        body: 'No conversion, no surprise at checkout. What you see is what you pay.',
+      },
+      {
+        label: 'Built for you',
+        body: 'Send us your photos and details. No editor to wrestle with.',
+      },
+      {
+        label: '7–10 days',
+        body: 'Or 1–3 days on express, marked with a bolt on the card.',
+      },
+    ],
+    bannerTitle: 'Talk to us before you decide.',
+    bannerBody:
+      'Fifteen minutes over Google Meet, in English — bring your date, your guest count and any template you have your eye on.',
   },
 
   templateDetail: {

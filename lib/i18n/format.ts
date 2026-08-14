@@ -4,7 +4,7 @@
  * same way and hydration does not disagree.
  */
 
-import type { Currency } from '../currency/config'
+import type { Currency } from '../market/config'
 import type { Locale } from './config'
 
 /**
@@ -46,7 +46,7 @@ export function formatMyr(amount: number) {
  *
  * Falls back to đồng whenever a template has no ringgit price, so a document
  * that has not been priced for Malaysia yet shows a real number instead of an
- * empty or invented one.
+ * empty or invented one. Fill `Giá tiền (RM)` in Sanity to move one across.
  */
 export function formatPrice(
   price: { vnd: number; myr?: number },

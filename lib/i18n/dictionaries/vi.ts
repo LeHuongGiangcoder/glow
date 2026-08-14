@@ -31,6 +31,11 @@ export const vi: Dictionary = {
     templateDetail: {
       title: 'Mẫu {name}',
     },
+    malaysia: {
+      title: 'Mẫu website cưới cho thị trường Malaysia',
+      description:
+        'Bộ sưu tập website cưới của Glow, báo giá bằng Ringgit cho các cặp đôi cưới tại Malaysia. Giá công khai, có demo thật, bàn giao 7–10 ngày hoặc hoả tốc 1–3 ngày.',
+    },
     book: {
       title: 'Đặt lịch trò chuyện',
       description:
@@ -415,6 +420,29 @@ export const vi: Dictionary = {
       expressTitle: 'Còn nhận hoả tốc (1–3 ngày)',
       express: 'Còn nhận hoả tốc',
     },
+  },
+
+  malaysia: {
+    eyebrow: 'Malaysia',
+    title: 'Website cưới, báo giá cho thị trường Malaysia',
+    lede: 'Vẫn là bộ sưu tập Glow làm cho các cặp đôi ở Việt Nam, báo giá bằng Ringgit. Mỗi mẫu đều do Glow dựng cho bạn — bạn chọn giao diện, Glow đưa câu chuyện của bạn vào — và mẫu nào cũng có demo mở xem được ngay.',
+    points: [
+      {
+        label: 'Báo giá bằng Ringgit',
+        body: 'Không quy đổi, không phát sinh lúc chốt. Thấy số nào trả số đó.',
+      },
+      {
+        label: 'Glow dựng giúp bạn',
+        body: 'Bạn gửi ảnh và thông tin. Không phải tự loay hoay với trình chỉnh sửa.',
+      },
+      {
+        label: '7–10 ngày',
+        body: 'Hoặc 1–3 ngày nếu hoả tốc, mẫu nào nhận sẽ có dấu tia sét trên card.',
+      },
+    ],
+    bannerTitle: 'Trò chuyện với Glow trước khi quyết định.',
+    bannerBody:
+      'Mười lăm phút qua Google Meet, nói tiếng Anh — mang theo ngày cưới, số khách và mẫu bạn đang để ý.',
   },
 
   templateDetail: {
