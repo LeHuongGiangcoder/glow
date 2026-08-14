@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Button } from '@/components/ui/Button'
 import { Footer } from '@/components/ui/Footer'
 import { NavBar } from '@/components/ui/NavBar'
+import { Hero } from '@/components/marketing/Hero'
 import { TemplateGallery } from '@/components/marketplace/TemplateGallery'
 import { getI18n } from '@/lib/i18n/server'
 import { MarketProvider } from '@/lib/market/client'
@@ -36,30 +37,13 @@ export default async function MalaysiaPage() {
       <NavBar market={MY_MARKET} />
 
       <main className="flex-1 screen-transition">
+        {/* The same opening as the home page — a planner forwards this link,
+            and the promise a Malaysian couple lands on is the same one. Only
+            the market wrapper around it differs, so prices read in ringgit. */}
+        <Hero market={MY_MARKET} />
+
         <section className="container-max section-y">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">{t.malaysia.eyebrow}</p>
-              <h1 className="display-hero mt-4">{t.malaysia.title}</h1>
-            </div>
-            <p className="lede">{t.malaysia.lede}</p>
-          </div>
-
-          {/* Three reassurances rather than a second paragraph: a planner
-              forwards this link, so the answers a Malaysian couple asks first
-              have to survive being skimmed. */}
-          <dl className="hairline-t mt-12 grid grid-cols-1 gap-8 pt-9 sm:grid-cols-3">
-            {t.malaysia.points.map((point) => (
-              <div key={point.label}>
-                <dt className="eyebrow text-fg-muted">{point.label}</dt>
-                <dd className="lede mt-3 text-sm">{point.body}</dd>
-              </div>
-            ))}
-          </dl>
-
-          <div className="mt-14">
-            <TemplateGallery templates={templates} />
-          </div>
+          <TemplateGallery templates={templates} />
 
           <div className="mt-16 flex flex-wrap items-center justify-between gap-6 rounded-md bg-sunken px-8 py-10 md:px-12">
             <div className="max-w-[42ch]">
